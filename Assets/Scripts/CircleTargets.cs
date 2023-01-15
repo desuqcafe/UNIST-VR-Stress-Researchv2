@@ -43,32 +43,37 @@ void Start()
     transform.GetChild(0).GetComponent<FittsLawCircle>().isHighlighted = true;
 }
 
-public void CircleTouched()
+public void CircleTouched(GameObject hoveredObject)
 {
+
     if (hasRun)
     {
         return;
     }
     hasRun = true;
+
     theHolder = GameObject.Find("FittGenerator");
 
-    Debug.Log(theHolder.transform.childCount);
+    // // Check if the first target is highlighted
+    // FittsLawCircle firstTarget = theHolder.transform.GetChild(0).GetComponent<FittsLawCircle>();
+    // if (!firstTarget.isHighlighted)
+    // {
+    //     // if no highlighted object is found, break out of the loop and do not execute the rest of the code
+    //     hasRun = false;
+    //     return;
+    // }
 
-    // Check if the first target is highlighted
-    FittsLawCircle firstTarget = theHolder.transform.GetChild(0).GetComponent<FittsLawCircle>();
-    if (!firstTarget.isHighlighted)
-    {
-        // if no highlighted object is found, break out of the loop and do not execute the rest of the code
-        return;
-    }
     bool loopStarted = false;
 
     // Check if any of the targets are highlighted
     for (int i = 0; i < theHolder.transform.childCount; i++)
     {
+        FittsLawCircle enteredObject = hoveredObject.GetComponent<FittsLawCircle>();
         FittsLawCircle target = theHolder.transform.GetChild(i).GetComponent<FittsLawCircle>();
-        if (target.isHighlighted && !loopStarted)
+
+        if (target.isHighlighted == enteredObject.isHighlighted && !loopStarted)
         {
+
             loopStarted = true;
 
             // Unhighlight the current target
@@ -87,7 +92,25 @@ public void CircleTouched()
 
             loopStarted = false;
             hasRun = false;
+            return;
+        }
+ 
+    }
+
+}
+
+public GameObject GetHighlightedChild()
+{
+    for (int i = 0; i < theHolder.transform.childCount; i++)
+    {
+        FittsLawCircle target = theHolder.transform.GetChild(i).GetComponent<FittsLawCircle>();
+        if (target.isHighlighted)
+        {
+            // Return the child object that has isHighlighted set to true
+            return target.gameObject;
         }
     }
+    // If no highlighted child is found, return null
+    return null;
 }
 }

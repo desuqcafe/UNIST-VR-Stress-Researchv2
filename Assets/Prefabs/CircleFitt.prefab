@@ -94,9 +94,17 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1984369994815267067}
   m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
   m_IsTrigger: 0
+  m_ProvidesContacts: 0
   m_Enabled: 1
-  serializedVersion: 2
+  serializedVersion: 3
   m_Radius: 0.5
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &158727821872669758
@@ -120,6 +128,7 @@ MonoBehaviour:
   renderer: {fileID: 4755297761852162244}
   highlightMaterial: {fileID: 2100000, guid: 6213dfd84faa18d458c81b715ecff395, type: 2}
   originalMaterial: {fileID: 0}
+  myselfObject: {fileID: 0}
   runOnce: 0
 --- !u!114 &9061672177516446702
 MonoBehaviour:
@@ -140,6 +149,7 @@ MonoBehaviour:
     m_Bits: 4294967295
   m_InteractionLayers:
     m_Bits: 1
+  m_DistanceCalculationMode: 1
   m_SelectMode: 0
   m_CustomReticle: {fileID: 0}
   m_FirstHoverEntered:
@@ -151,10 +161,9 @@ MonoBehaviour:
   m_HoverEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2748358537376731733, guid: d1c86271fae7d79469c56328be4a8cee,
-          type: 3}
-        m_TargetAssemblyTypeName: CircleTargets, Assembly-CSharp
-        m_MethodName: CircleTouched
+      - m_Target: {fileID: 158727821872669758}
+        m_TargetAssemblyTypeName: FittsLawCircle, Assembly-CSharp
+        m_MethodName: CheckObject
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

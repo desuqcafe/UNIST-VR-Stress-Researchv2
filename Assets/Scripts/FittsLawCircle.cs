@@ -25,6 +25,7 @@ public class FittsLawCircle : MonoBehaviour
 
     // Original material of the target
     public Material originalMaterial;
+    public GameObject myselfObject;
 
     CircleTargets circleTarget;
 
@@ -41,6 +42,12 @@ public class FittsLawCircle : MonoBehaviour
         // Calculate the movement time (MT) for the target
         movementTime = a + b * id;
 
+        // Assign the script's owner as the gameObject
+        myselfObject = gameObject;
+
+        //Assign the CircleTargets component to circleTarget
+        circleTarget = GameObject.Find("FittGenerator").GetComponent<CircleTargets>();
+
     }
 
     void Update()
@@ -52,5 +59,18 @@ public class FittsLawCircle : MonoBehaviour
             runOnce = true;
         }
 
+    }
+
+    public void CheckObject()
+    {
+        myselfObject = gameObject;
+
+        if (isHighlighted)
+        {
+            circleTarget.CircleTouched(myselfObject);
+            Debug.Log("Highhlighted");
+        } else {
+            Debug.Log("Not Highlighted");
+        }
     }
 }

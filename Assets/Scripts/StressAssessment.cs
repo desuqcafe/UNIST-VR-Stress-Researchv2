@@ -9,34 +9,12 @@ public class StressAssessment : MonoBehaviour
     public Button[] question3Buttons;
 
     public TMP_Text scoreTracker;
-
-    private int currentQuestion = 1;
     private int score = 0;
     public int value = 0;
 
-    private void Awake()
-    {
-        for (int i = 0; i < 4; i++)
-        {
-            int buttonIndex = i;
-            question1Buttons[i].onClick.AddListener(() => Question1ButtonClicked(buttonIndex));
-        }
-        // add OnClick listener to buttons in question 2
-        foreach (Button button in question2Buttons)
-        {
-            button.onClick.AddListener(() => Question2ButtonClicked(button));
-        }
-
-        // add OnClick listener to buttons in question 3
-        foreach (Button button in question3Buttons)
-        {
-            button.onClick.AddListener(() => Question3ButtonClicked(button));
-        }
-    }
-
     private void Start()
     {
-                // Disable the buttons in question 2 and 3
+        // Disable the buttons in question 2 and 3
         foreach (Button button in question2Buttons)
         {
             button.interactable = false;
@@ -49,56 +27,56 @@ public class StressAssessment : MonoBehaviour
     }
 
 public void Question1ButtonClicked(int buttonIndex)
+{
+    if (question1Buttons != null && buttonIndex >= 0 && buttonIndex < question1Buttons.Length && question1Buttons[buttonIndex] != null)
     {
-        if (question1Buttons != null && buttonIndex >= 0 && buttonIndex < question1Buttons.Length && question1Buttons[buttonIndex] != null)
+        // value = int.Parse(question1Buttons[buttonIndex].GetComponentInChildren<Text>().text);
+        // score += value;
+
+        // Disable the buttons in question 1 except the button clicked
+        for (int i = 0; i < question1Buttons.Length; i++)
         {
-            value = int.Parse(question1Buttons[buttonIndex].GetComponentInChildren<Text>().text);
-            score += value;
-
-            // Disable the buttons in question 1
-            for (int i = 0; i < question1Buttons.Length; i++)
+            if (question1Buttons[i] != question1Buttons[buttonIndex])
             {
-                if (i != buttonIndex)
-                {
-                    question1Buttons[i].interactable = false;
-                    question1Buttons[i].GetComponent<Image>().color = Color.gray;
-                }
+                question1Buttons[i].interactable = false;
+                question1Buttons[i].GetComponent<Image>().color = Color.gray;
             }
-
-            // change the color of the button
-            question1Buttons[buttonIndex].GetComponent<Image>().color = Color.green;
-
-
-            // Enable the buttons in question 2
-            foreach (Button button in question2Buttons)
-            {
-                button.interactable = true;
-            }
-
-            scoreTracker.text = "Score: " + score.ToString();
-        }
-    }
-
-    public void Question2ButtonClicked(Button button_2)
-    {
-        // retrieve int value from button
-        int value = int.Parse(button_2.GetComponentInChildren<Text>().text);
-
-        // add value to score
-        score += value;
-
-        // move on to next question
-        currentQuestion = 3;
-
-        // Disable the buttons in question 2
-        foreach (Button button in question2Buttons)
-        {
-            button.interactable = false;
-            button.GetComponent<Image>().color = Color.gray;
         }
 
         // change the color of the button
-        button_2.GetComponent<Image>().color = Color.green;
+        question1Buttons[buttonIndex].GetComponent<Image>().color = Color.green;
+
+
+        // Enable the buttons in question 2
+        foreach (Button button in question2Buttons)
+        {
+            button.interactable = true;
+        }
+
+        scoreTracker.text = "Score: " + score.ToString();
+    }
+}
+
+    public void Question2ButtonClicked(int buttonIndex)
+    {
+    if (question2Buttons != null && buttonIndex >= 0 && buttonIndex < question2Buttons.Length && question2Buttons[buttonIndex] != null)
+    {
+        // value = int.Parse(question2Buttons[buttonIndex].GetComponentInChildren<Text>().text);
+        // score += value;
+
+        // Disable the buttons in question 1 except the button clicked
+        for (int i = 0; i < question2Buttons.Length; i++)
+        {
+            if (question2Buttons[i] != question2Buttons[buttonIndex])
+            {
+                question2Buttons[i].interactable = false;
+                question2Buttons[i].GetComponent<Image>().color = Color.gray;
+            }
+        }
+
+        // change the color of the button
+        question2Buttons[buttonIndex].GetComponent<Image>().color = Color.green;
+
 
         // Enable the buttons in question 3
         foreach (Button button in question3Buttons)
@@ -108,26 +86,29 @@ public void Question1ButtonClicked(int buttonIndex)
 
         scoreTracker.text = "Score: " + score.ToString();
     }
+    }
 
-    public void Question3ButtonClicked(Button button_3)
+    public void Question3ButtonClicked(int buttonIndex)
     {
-        // retrieve int value from button
-        int value = int.Parse(button_3.GetComponentInChildren<Text>().text);
+    if (question3Buttons != null && buttonIndex >= 0 && buttonIndex < question3Buttons.Length && question3Buttons[buttonIndex] != null)
+    {
+        // value = int.Parse(question3Buttons[buttonIndex].GetComponentInChildren<Text>().text);
+        // score += value;
 
-        // add value to score
-        score += value;
-
-        // Disable the buttons in question 3
-        foreach (Button button in question3Buttons)
+        // Disable the buttons in question 1 except the button clicked
+        for (int i = 0; i < question3Buttons.Length; i++)
         {
-            button.interactable = false;
-            button.GetComponent<Image>().color = Color.gray;
+            if (question3Buttons[i] != question3Buttons[buttonIndex])
+            {
+                question3Buttons[i].interactable = false;
+                question3Buttons[i].GetComponent<Image>().color = Color.gray;
+            }
         }
 
         // change the color of the button
-        button_3.GetComponent<Image>().color = Color.green;
+        question3Buttons[buttonIndex].GetComponent<Image>().color = Color.green;
 
-        // questionnaire is complete, do something with the score
         scoreTracker.text = "Score: " + score.ToString();
+    }
     }
 }
