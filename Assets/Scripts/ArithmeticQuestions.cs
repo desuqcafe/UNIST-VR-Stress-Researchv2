@@ -15,6 +15,8 @@ public class ArithmeticQuestions : MonoBehaviour
     private string[,] answers = new string[4,4];
     private int currentQuestion = 0;
 
+    TaskManager taskManager;
+
     void Start()
     {
         questions[0] = "Please choose the correct answer:\n\n30";
@@ -56,6 +58,10 @@ public void OnButtonClick(int buttonIndex)
         if (currentQuestion >= questions.Length)
         {
             currentQuestion = 0;
+
+            taskManager.IntroDisable();
+            taskManager.SubtractionEnable();
+
         }
         GenerateQuestion();
     }

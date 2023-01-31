@@ -14,6 +14,8 @@ public class SubtractionContinuous : MonoBehaviour
     [SerializeField] private int currentValue = 1022;
     [SerializeField] private int currentQuestion = 50;
 
+    TaskManager taskManager;
+
     void Start()
     {
         currentQuestion = 50;
@@ -41,7 +43,7 @@ public class SubtractionContinuous : MonoBehaviour
 
             currentValue = 1022;
         }
-        
+
         remainingText.text = "Remaining: " + currentQuestion;
 
         if (currentQuestion <= 0)
@@ -52,7 +54,12 @@ public class SubtractionContinuous : MonoBehaviour
 
         currentQuestion--;
 
-StartCoroutine(WaitAndGenerateQuestion());
+        StartCoroutine(WaitAndGenerateQuestion());
+
+        if (currentQuestion <= 45) {
+            taskManager.SubtractionDisable();
+            taskManager.KeyboardEnable();
+        }
 
     }
 
