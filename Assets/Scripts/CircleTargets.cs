@@ -41,6 +41,9 @@ void Start()
 
     // Highlight the first target
     transform.GetChild(0).GetComponent<FittsLawCircle>().isHighlighted = true;
+
+    // Rotate the spawned object 90 degrees on the Y axis
+    theHolder.transform.rotation = Quaternion.Euler(0, 90, 0);
 }
 
 public void CircleTouched(GameObject hoveredObject)

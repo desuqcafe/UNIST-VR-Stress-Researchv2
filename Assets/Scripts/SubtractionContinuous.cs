@@ -25,40 +25,43 @@ public class SubtractionContinuous : MonoBehaviour
 
     public void OnButtonClick(int buttonIndex)
     {
-        if (buttonIndex == correctAnswer)
+        if (currentQuestion <= 45)
         {
-            // Get the Image component on the button
-            Image buttonImage = answerButtons[buttonIndex].GetComponent<Image>();
-            // Change the color of the image to green
-            buttonImage.color = Color.green;
-
-            currentValue -= 13;
+            TaskManager.Instance.SubtractionDisable();
+            TaskManager.Instance.KeyboardEnable();
         }
         else
         {
-            // Get the Image component on the button
-            Image buttonImage = answerButtons[buttonIndex].GetComponent<Image>();
-            // Change the color of the image to green
-            buttonImage.color = Color.red;
+            if (buttonIndex == correctAnswer)
+            {
+                // Get the Image component on the button
+                Image buttonImage = answerButtons[buttonIndex].GetComponent<Image>();
+                // Change the color of the image to green
+                buttonImage.color = Color.green;
 
-            currentValue = 1022;
-        }
+                currentValue -= 13;
+            }
+            else
+            {
+                // Get the Image component on the button
+                Image buttonImage = answerButtons[buttonIndex].GetComponent<Image>();
+                // Change the color of the image to green
+                buttonImage.color = Color.red;
 
-        remainingText.text = "Remaining: " + currentQuestion;
+                currentValue = 1022;
+            }
 
-        if (currentQuestion <= 0)
-        {
-            Debug.Log("Quiz finished");
-            return;
-        }
+            remainingText.text = "Remaining: " + currentQuestion;
 
-        currentQuestion--;
+            if (currentQuestion <= 0)
+            {
+                Debug.Log("Quiz finished");
+                return;
+            }
 
-        StartCoroutine(WaitAndGenerateQuestion());
+            currentQuestion--;
 
-        if (currentQuestion <= 45) {
-            taskManager.SubtractionDisable();
-            taskManager.KeyboardEnable();
+            StartCoroutine(WaitAndGenerateQuestion());
         }
 
     }

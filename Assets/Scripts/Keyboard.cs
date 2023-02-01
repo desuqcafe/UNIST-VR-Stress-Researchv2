@@ -7,7 +7,7 @@ public class Keyboard : MonoBehaviour
 {
     public TMP_InputField inputField;
     public TMP_Text promptText;
-    private string[] promptList = {"The bear waves", "Plan ahead for the future", "Finished"};
+    private string[] promptList = {"The bear waves", "Plan ahead for the future", "The Zebra dances in a plane"};
     private int currentPromptIndex = 0;
     public GameObject normalButtons;
     public GameObject capsButtons;
@@ -88,13 +88,10 @@ public class Keyboard : MonoBehaviour
 
     public void GenerateNewPrompt()
     {
-        if (promptCount == 2) {
-            taskManager.KeyboardDisable();
-            taskManager.FittEnable();
-        }
-
-        if (promptFinished)
-        {
+        if (promptCount >= 3) {
+            TaskManager.Instance.KeyboardDisable();
+            TaskManager.Instance.FittEnable();
+        } else if (promptFinished) {
             currentPromptIndex++;
             if (currentPromptIndex >= promptList.Length)
             {

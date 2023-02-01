@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TaskManager : MonoBehaviour
 {
+    public static TaskManager Instance { get; private set; }
 
     public GameObject KeyboardTask;
     public GameObject SubtractionTask;
@@ -18,18 +19,32 @@ public class TaskManager : MonoBehaviour
 
     bool introFinished = false;
 
-    void Start(){
+    void Awake(){
+
+    if (Instance != null && Instance != this) 
+    { 
+        Destroy(this); 
+    } 
+    else 
+    { 
+        Instance = this; 
+    } 
+    
     introCubeScript = introCube.GetComponent<IntroObject>();
     introSphereScript = introSphere.GetComponent<IntroObject>();
 
-    Invoke("introObjectsCheck", 1.0f);
-    Invoke("CancelInvokesCheck", 5.0f);
+    }
 
+    void Start(){
+    InvokeRepeating("introObjectsCheck", 1.0f, 1.0f);
+    InvokeRepeating("CancelInvokesCheck", 5.0f, 5.0f);
     }
 
     private void introObjectsCheck()
     {
-        if (introCubeScript.userHandCame == true && introCubeScript.userHandCame == true) {
+      //  Debug.Log("Clled IntroObjectsCheck" + introCubeScript.userHandCame + " " + introSphereScript.userHandCame);
+
+        if (introCubeScript.userHandCame == true && introSphereScript.userHandCame == true) {
             introFinished = true;
             introObjectDisable();
             IntroEnable();
@@ -40,6 +55,7 @@ public class TaskManager : MonoBehaviour
     {
         if (introFinished == true) {
             CancelInvoke("introObjectsCheck");
+            CancelInvoke("CancelInvokesCheck");
         }
     }
 
