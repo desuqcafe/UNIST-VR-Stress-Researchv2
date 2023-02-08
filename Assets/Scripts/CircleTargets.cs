@@ -85,7 +85,7 @@ public void CircleTouched(GameObject hoveredObject)
         // reduce the scale of all children by 0.5
         foreach (Transform child in theHolder.transform)
         {
-            child.localScale += new Vector3(0.25f, 0.25f, 0.25f);
+            child.localScale += new Vector3(0.50f, 0.50f, 0.50f);
         }
     }
 

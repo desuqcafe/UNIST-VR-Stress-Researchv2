@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class Keyboard : MonoBehaviour
 {
@@ -16,7 +17,8 @@ public class Keyboard : MonoBehaviour
 
     public int promptCount = 0;
     TaskManager taskManager;
-    SubtractionContinuous subtractionScript;
+    public XRRayInteractor leftHandRay;
+    public XRRayInteractor rightHandRay;
 
     void Start()
     {
@@ -86,13 +88,18 @@ public class Keyboard : MonoBehaviour
             promptFinished = true;
         }
     }
+    public void enableRays()
+    {
+        leftHandRay.enabled = true;
+        rightHandRay.enabled = true;
+    }
 
     public void GenerateNewPrompt()
     {
         if (promptCount == 1) {
             TaskManager.Instance.KeyboardDisable();
             TaskManager.Instance.FittEnable();
-            subtractionScript.enableRays();
+            enableRays();
         } else if (promptFinished) {
             currentPromptIndex++;
             if (currentPromptIndex >= promptList.Length)
