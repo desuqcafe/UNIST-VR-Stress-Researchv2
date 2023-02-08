@@ -3,7 +3,8 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 using System.Linq;
-using System.Collections.Generic;
+using UnityEngine.XR;
+using UnityEngine.XR.Interaction.Toolkit;
 
 public class SubtractionContinuous : MonoBehaviour
 {
@@ -15,6 +16,8 @@ public class SubtractionContinuous : MonoBehaviour
     [SerializeField] private int currentQuestion = 50;
 
     TaskManager taskManager;
+    public XRRayInteractor leftHandRay;
+    public XRRayInteractor rightHandRay;
 
     void Start()
     {
@@ -23,12 +26,25 @@ public class SubtractionContinuous : MonoBehaviour
         remainingText.text = "Remaining: " + currentQuestion.ToString();
     }
 
+    void disableRays() 
+    {
+        leftHandRay.enabled = false;
+        rightHandRay.enabled = false;
+    }
+
+    public void enableRays()
+    {
+        leftHandRay.enabled = true;
+        rightHandRay.enabled = true;
+    }
+
     public void OnButtonClick(int buttonIndex)
     {
         if (currentQuestion <= 45)
         {
             TaskManager.Instance.SubtractionDisable();
             TaskManager.Instance.KeyboardEnable();
+            disableRays();
         }
         else
         {

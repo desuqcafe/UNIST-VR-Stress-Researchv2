@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class CircleTargets : MonoBehaviour
@@ -20,6 +21,9 @@ public class CircleTargets : MonoBehaviour
 
     private bool hasRun = false;
 
+    // List to keep track of the highlighted objects
+    private List<int> highlightedObjects = new List<int>();
+
 void Start()
 {
     
@@ -41,9 +45,12 @@ void Start()
 
     // Highlight the first target
     transform.GetChild(0).GetComponent<FittsLawCircle>().isHighlighted = true;
+    highlightedObjects.Add(0);
 
     // Rotate the spawned object 90 degrees on the Y axis
     theHolder.transform.rotation = Quaternion.Euler(0, 90, 0);
+
+    //float currentRadius = radius;
 }
 
 public void CircleTouched(GameObject hoveredObject)
@@ -56,6 +63,31 @@ public void CircleTouched(GameObject hoveredObject)
     hasRun = true;
 
     theHolder = GameObject.Find("FittGenerator");
+
+    if (selectionsCount == 9)
+    {
+        Vector3 newScale = theHolder.transform.localScale;
+        newScale.x -= 0.5f;
+        newScale.y -= 0.5f;
+        newScale.z -= 0.5f;
+        theHolder.transform.localScale = newScale;
+        // reduce the scale of all children by 0.5
+        foreach (Transform child in theHolder.transform)
+        {
+            child.localScale -= new Vector3(0.5f, 0.5f, 0.5f);
+        }
+    } else if (selectionsCount == 18) {
+        Vector3 newScale = theHolder.transform.localScale;
+        newScale.x += 0.25f;
+        newScale.y += 0.25f;
+        newScale.z += 0.25f;
+        theHolder.transform.localScale = newScale;
+        // reduce the scale of all children by 0.5
+        foreach (Transform child in theHolder.transform)
+        {
+            child.localScale += new Vector3(0.25f, 0.25f, 0.25f);
+        }
+    }
 
     // // Check if the first target is highlighted
     // FittsLawCircle firstTarget = theHolder.transform.GetChild(0).GetComponent<FittsLawCircle>();
@@ -85,7 +117,13 @@ public void CircleTouched(GameObject hoveredObject)
             target.runOnce = false;
 
             // Select a random target
-            int nextIndex = Random.Range(0, theHolder.transform.childCount);
+            //int nextIndex = Random.Range(0, theHolder.transform.childCount);
+
+            // Select the target across from the current target
+            int nextIndex = (i + (numTargets / 2)) % numTargets;
+
+            // Add the index of the next selected object to the list of highlighted indices
+            highlightedObjects.Add(nextIndex);
 
             // Highlight the selected target
             theHolder.transform.GetChild(nextIndex).GetComponent<FittsLawCircle>().isHighlighted = true;

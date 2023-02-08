@@ -7,7 +7,7 @@ public class Keyboard : MonoBehaviour
 {
     public TMP_InputField inputField;
     public TMP_Text promptText;
-    private string[] promptList = {"The bear waves", "Plan ahead for the future", "The Zebra dances in a plane"};
+    private string[] promptList = {"I AM NOT PLANNING ON DOING ANYTHING", "Plan ahead for the future", "The Zebra dances in a plane"};
     private int currentPromptIndex = 0;
     public GameObject normalButtons;
     public GameObject capsButtons;
@@ -16,11 +16,12 @@ public class Keyboard : MonoBehaviour
 
     public int promptCount = 0;
     TaskManager taskManager;
+    SubtractionContinuous subtractionScript;
 
     void Start()
     {
         inputField.onValueChanged.AddListener(CompareInput);
-        caps = false;
+        caps = true;
         currentPromptIndex = 0;
         promptText.text = promptList[currentPromptIndex];
     }
@@ -88,9 +89,10 @@ public class Keyboard : MonoBehaviour
 
     public void GenerateNewPrompt()
     {
-        if (promptCount >= 3) {
+        if (promptCount == 1) {
             TaskManager.Instance.KeyboardDisable();
             TaskManager.Instance.FittEnable();
+            subtractionScript.enableRays();
         } else if (promptFinished) {
             currentPromptIndex++;
             if (currentPromptIndex >= promptList.Length)
