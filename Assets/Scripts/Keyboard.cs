@@ -8,7 +8,7 @@ public class Keyboard : MonoBehaviour
 {
     public TMP_InputField inputField;
     public TMP_Text promptText;
-    private string[] promptList = {"I AM NOT PLANNING ON DOING ANYTHING", "Plan ahead for the future", "The Zebra dances in a plane"};
+    private string[] promptList = {"i am not planning on doing anything", "Plan ahead for the future", "The Zebra dances in a plane"};
     private int currentPromptIndex = 0;
     public GameObject normalButtons;
     public GameObject capsButtons;

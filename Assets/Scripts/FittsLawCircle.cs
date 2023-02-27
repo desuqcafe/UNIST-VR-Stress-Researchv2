@@ -31,6 +31,8 @@ public class FittsLawCircle : MonoBehaviour
 
     public bool runOnce = false;
 
+    public float value;
+
     void Awake()
     {
         // Save the original material of the target
