@@ -1,5 +1,46 @@
+// using UnityEngine;
+// using TMPro;
+
+// public class FittsLawCircleSubtraction : MonoBehaviour
+// {
+//     public GameObject spherePrefab;
+//     public Canvas canvas;
+//     public TMP_Text sphereTextPrefab;
+
+//     private int sphereCount = 0;
+
+//     void Start()
+//     {
+//         // Instantiate the first sphere prefab
+//         GameObject sphere1 = Instantiate(spherePrefab);
+//         SetSphereText(sphere1);
+
+//         // Instantiate the second sphere prefab
+//         GameObject sphere2 = Instantiate(spherePrefab);
+//         SetSphereText(sphere2);
+//     }
+
+//     void SetSphereText(GameObject sphere)
+//     {
+//         // Increment the sphere count
+//         sphereCount++;
+
+//         // Get the TMP Text component on the sphere
+//         TMP_Text sphereText = sphere.GetComponentInChildren<TMP_Text>();
+
+//         // Assign the canvas and TMP Text prefab to the sphere
+//         canvas = sphere.GetComponentInChildren<Canvas>();
+//         sphereTextPrefab = sphereText;
+
+//         // Update the TMP Text with the sphere count
+//         sphereText.text = sphereCount.ToString();
+//     }
+// }
+
+
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class FittsLawCircleSubtraction : MonoBehaviour
 {
@@ -19,12 +60,12 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     private List<int> highlightedObjects = new List<int>();
 
     // Array to store the values for the target objects
-    private float[] values;
+    public float[] values;
 
     // Current answer for the game
     private float currentAnswer;
 
-void Start()
+    void Start()
     {
         PlacePosition();
         AssignFormulaValue();
@@ -73,31 +114,49 @@ void Start()
         currentAnswer = correctValue;
     }
 
-    private void PlacePosition()
+private void PlacePosition()
+{
+    // Calculate the angle between each target
+    float angle = 360f / numTargets;
+
+    // Create the targets in a circular pattern
+    for (int i = 0; i < numTargets; i++)
     {
-        // Calculate the angle between each target
-        float angle = 360f / numTargets;
+        // Calculate the position of this target
+        float yPos = radius * Mathf.Cos(angle * i * Mathf.Deg2Rad);
+        float zPos = radius * Mathf.Sin(angle * i * Mathf.Deg2Rad);
+        Vector3 position = new Vector3(0, yPos, zPos);
 
-        // Create the targets in a circular pattern
-        for (int i = 0; i < numTargets; i++)
-        {
-            // Calculate the position of this target
-            float yPos = radius * Mathf.Cos(angle * i * Mathf.Deg2Rad);
-            float zPos = radius * Mathf.Sin(angle * i * Mathf.Deg2Rad);
-            Vector3 position = new Vector3(0, yPos, zPos);
+// Create the target game object and set its position
+GameObject target = Instantiate(targetPrefab, position, Quaternion.identity);
+target.transform.SetParent(transform);
 
-            // Create the target game object and set its position
-            GameObject target = Instantiate(targetPrefab, position, Quaternion.identity);
-            target.transform.SetParent(transform);
-        }
+// Get the FittsLawTarget script and set its value and valueText fields
+FittsLawTarget fittsLawTarget = target.GetComponent<FittsLawTarget>();
 
-        // Highlight the first target
-        transform.GetChild(0).GetComponent<FittsLawCircle>().isHighlighted = true;
-        highlightedObjects.Add(0);
-
-        // Rotate the spawned object 90 degrees on the Y axis
-        theHolder.transform.rotation = Quaternion.Euler(0, 90, 0);
+if (fittsLawTarget != null) {
+    Debug.Log("All Good");
+    if (i >= values.Length)
+    {
+        Debug.LogError("Index out of bounds for values array: " + i);
+        break;
     }
+}
+
+fittsLawTarget.value = values[i];
+fittsLawTarget.valueText = target.GetComponentInChildren<TMP_Text>();
+
+// Set the value text component to the near value
+fittsLawTarget.valueText.text = values[i].ToString();
+    }
+
+    // Highlight the first target
+    transform.GetChild(0).GetComponent<FittsLawCircle>().isHighlighted = true;
+    highlightedObjects.Add(0);
+
+    // Rotate the spawned object 90 degrees on the Y axis
+    theHolder.transform.rotation = Quaternion.Euler(0, 90, 0);
+}
 
 public void CircleTouched(GameObject hoveredObject)
 {
@@ -107,7 +166,7 @@ public void CircleTouched(GameObject hoveredObject)
     }
     hasRun = true;
 
-    theHolder = GameObject.Find("FittGeneratorB");
+    theHolder = GameObject.Find("FittGenSubtraction");
 
     // Check if the selected object has the correct value
     int selectedObjectIndex = hoveredObject.transform.GetSiblingIndex();
@@ -132,7 +191,11 @@ public void CircleTouched(GameObject hoveredObject)
                 values[i] = nearValue;
 
                 // Set the value of the target object
-                transform.GetChild(i).GetComponent<FittsLawCircle>().value = nearValue;
+                FittsLawTarget fittsLawTarget = transform.GetChild(i).GetComponent<FittsLawTarget>();
+                fittsLawTarget.value = nearValue;
+
+                // Update the value text of the target object on the canvas
+                fittsLawTarget.valueText.text = nearValue.ToString();
             }
         }
 
@@ -143,7 +206,11 @@ public void CircleTouched(GameObject hoveredObject)
             values[correctIndex] = currentAnswer;
 
             // Set the value of the target object
-            transform.GetChild(correctIndex).GetComponent<FittsLawCircle>().value = currentAnswer;
+            FittsLawTarget fittsLawTarget = transform.GetChild(correctIndex).GetComponent<FittsLawTarget>();
+            fittsLawTarget.value = currentAnswer;
+
+            // Update the value text of the target object on the canvas
+            fittsLawTarget.valueText.text = currentAnswer.ToString();
         }
     }
 
@@ -175,13 +242,13 @@ public GameObject GetHighlightedChild()
     for (int i = 0; i < theHolder.transform.childCount; i++)
     {
         FittsLawCircle target = theHolder.transform.GetChild(i).GetComponent<FittsLawCircle>();
-        if (target.isHighlighted)
-        {
-            // Return the child object that has isHighlighted set to true
-            return target.gameObject;
-        }
-    }
-    // If no highlighted child is found, return null
-    return null;
+        if ( target.isHighlighted)
+{
+// Return the child object that has isHighlighted set to true
+return target.gameObject;
+}
+}
+// If no highlighted child is found, return null
+return null;
 }
 }
