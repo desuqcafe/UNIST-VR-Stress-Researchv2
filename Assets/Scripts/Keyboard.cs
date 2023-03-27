@@ -8,7 +8,7 @@ public class Keyboard : MonoBehaviour
 {
     public TMP_InputField inputField;
     public TMP_Text promptText;
-    private string[] promptList = {"i am not planning on doing anything", "Plan ahead for the future", "The Zebra dances in a plane"};
+    private string[] promptList = {"Type about a Musician's steps to become a Dancer with magic", "Plan ahead for the future", "The Zebra dances in a plane"};
     private int currentPromptIndex = 0;
     public GameObject normalButtons;
     public GameObject capsButtons;
@@ -74,7 +74,7 @@ public class Keyboard : MonoBehaviour
             if(input[i] != prompt[i])
             {
                 // If the input does not match the prompt, change the text color to red
-                inputField.textComponent.color = Color.red;
+                //inputField.textComponent.color = Color.red;
                 return;
             } else {
                 inputField.textComponent.color = Color.black;
