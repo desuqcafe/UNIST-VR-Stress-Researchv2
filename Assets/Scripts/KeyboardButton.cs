@@ -19,6 +19,11 @@ public class KeyboardButton : MonoBehaviour
         }
     }
 
+    public void keyRayInsert()
+    {
+        keyboard.InsertChar(buttonText.text);
+    }
+
     public void NameToButtonText()
     {
         buttonText.text = gameObject.name;
