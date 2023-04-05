@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4797889059885684962}
   - component: {fileID: 6541271050169661073}
   - component: {fileID: 191092162688389873}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Button Text
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -147,7 +147,7 @@ GameObject:
   - component: {fileID: 4176294788137173450}
   - component: {fileID: 250676099096518238}
   - component: {fileID: 1215515992213247898}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -248,7 +248,7 @@ GameObject:
   - component: {fileID: 120192785456041574}
   - component: {fileID: 7464062881826296767}
   - component: {fileID: 6127277152115002850}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -332,7 +332,7 @@ GameObject:
   - component: {fileID: 410041722709419552}
   - component: {fileID: 258375990741991958}
   - component: {fileID: 4369652499415956460}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Keyboard Button
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -355,7 +355,7 @@ Transform:
   - {fileID: 120192785456041574}
   - {fileID: 8304371802334418343}
   m_Father: {fileID: 0}
-  m_RootOrder: -1
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &258375990741991958
 MonoBehaviour:
@@ -473,7 +473,7 @@ GameObject:
   - component: {fileID: 6130568757329835339}
   - component: {fileID: 8936213877987089683}
   - component: {fileID: 9081642633333109180}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -558,7 +558,7 @@ GameObject:
   - component: {fileID: 6120268897133065669}
   - component: {fileID: 6210008990981015470}
   - component: {fileID: 6850112312649103977}
-  m_Layer: 7
+  m_Layer: 0
   m_Name: Collider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
