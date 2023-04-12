@@ -8,8 +8,6 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     public GameObject spherePrefab;
     public Canvas canvas;
     public TMP_Text sphereTextPrefab;
-    public TMP_Text scoreText;
-    public TMP_Text gameOverText;
 
     List<TMP_Text> sphereTexts = new List<TMP_Text>();
 
@@ -28,11 +26,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     {
         sphereCount++;
         TMP_Text sphereText = sphere.GetComponentInChildren<TMP_Text>();
-        canvas = sphere.GetComponentInChildren<Canvas>();
-        sphereTextPrefab = sphereText;
-
         sphereTexts.Add(sphereText);
-
         sphereText.text = text;
 
         if (sphereCount == 5)
@@ -41,7 +35,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
             // Correct answer sphere
             fittsLawTarget.correctSphere = true;
-            Debug.Log("Correct sphere: " + fittsLawTarget.correctSphere);
+            Debug.Log("Setting Correct sphere: " + fittsLawTarget.correctSphere);
 
         }
         else
@@ -85,6 +79,9 @@ public class FittsLawCircleSubtraction : MonoBehaviour
             float y = Mathf.Cos(angle) * radius;
             sphere.transform.position = new Vector3(x, y, 0f);
         }
+
+        Debug.Log("Spheres Finished Spawning" + "\nRound Count: " + roundCount);
+        Debug.Log("CorrectAnswer: " + correctAnswer);
     }
 
     public void SphereClicked(XRBaseInteractable interactable)
@@ -94,53 +91,69 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
         if (fittsLawTarget.correctSphere)
         {
-            //fittsLawTarget.correctSphere = false;
+            score++;
             ContinueGame();
         }
         else
         {
-           // ResetGame();
+            // ResetGame();
+            Debug.Log("Incorrect Choice");
         }
     }
 
     public void ContinueGame()
+{
+    roundCount++;
+    correctAnswer -= 13;
+
+    if (roundCount > maxRounds)
     {
-        roundCount = roundCount + 1;
-        correctAnswer -= 13;
+        // gameOverText.text = "Game over! Final score: " + score;
+    }
+    else
+    {
+        // Choose a new correct sphere index randomly
+        int newCorrectIndex = Random.Range(0, sphereTexts.Count);
 
-        if (roundCount > maxRounds)
+        // Keep track of the index of the correct sphere text
+        int correctIndex = -1;
+
+        for (int i = 0; i < sphereTexts.Count; i++)
         {
-            // gameOverText.text = "Game over! Final score: " + score;
-        }
-        else
-        {
-            // Update the existing spheres instead of spawning new ones
-            foreach (TMP_Text sphereText in sphereTexts)
+            TMP_Text sphereText = sphereTexts[i];
+            FittsLawTarget fittsLawTarget = sphereText.transform.parent.GetComponent<FittsLawTarget>();
+
+            if (i == newCorrectIndex)
             {
-                if (sphereText.text == correctAnswer.ToString())
+                fittsLawTarget.correctSphere = true;
+                correctIndex = i;
+            }
+            else
+            {
+                fittsLawTarget.correctSphere = false;
+                int min = correctAnswer - 15;
+                int max = correctAnswer + 15;
+                int wrongAnswer = Random.Range(min, max);
+                while (wrongAnswer == correctAnswer)
                 {
-                    FittsLawTarget fittsLawTarget = sphereText.transform.parent.GetComponent<FittsLawTarget>();
-                    fittsLawTarget.correctSphere = true;
-                    // Update the text of the correct sphere
-                    sphereText.text = correctAnswer.ToString();
+                    wrongAnswer = Random.Range(min, max);
                 }
-                else
-                {
-                    int min = correctAnswer - 15;
-                    int max = correctAnswer + 15;
-                    int wrongAnswer = Random.Range(min, max);
-                    while (wrongAnswer == correctAnswer)
-                    {
-                        wrongAnswer = Random.Range(min, max);
-                    }
 
-                    // Update the text of the incorrect spheres
-                    sphereText.text = wrongAnswer.ToString();
-                }
+                sphereText.text = wrongAnswer.ToString();
             }
         }
 
+        // Update the text value of the correct sphere separately
+        if (correctIndex >= 0)
+        {
+            TMP_Text correctSphereText = sphereTexts[correctIndex];
+            correctSphereText.text = correctAnswer.ToString();
+        }
     }
+
+    Debug.Log("Next Round Started " + "\nRound Count: " + roundCount);
+    Debug.Log("CorrectAnswer: " + correctAnswer);
+}
 
     public void ResetGame()
     {
@@ -158,6 +171,9 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         }
         else
         {
+            sphereCount = 0;
+            score = 0;
+            sphereTexts.Clear();
             SpawnSpheres();
         }
 

@@ -11,7 +11,6 @@ public class FittsLawTarget : MonoBehaviour
      void Start()
      {
           valueText = GetComponentInChildren<TMP_Text>();
-          valueCanvas = GetComponentInChildren<Canvas>();
      }
 
 }

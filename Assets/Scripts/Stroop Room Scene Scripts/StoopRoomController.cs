@@ -63,4 +63,20 @@ public class StroopRoomController : MonoBehaviour
         // Set the text color to the matched color
         word.color = matchedColor;
     }
+
+    public void ObjectSelected(int index)
+    {
+        // Get the clicked object's index
+        int clickedIndex = objects[index].GetComponent<ObjectIndex>().index;
+
+        if (clickedIndex == matchedColorIndex)
+        {
+            // Correct object selected, start a new round
+            RandomizeColors();
+        }
+        else
+        {
+            // Incorrect object selected, you can implement additional logic here if needed
+        }
+    }
 }
