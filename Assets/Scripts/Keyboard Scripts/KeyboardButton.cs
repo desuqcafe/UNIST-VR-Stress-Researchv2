@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.XR.Interaction.Toolkit;
+
 
 public class KeyboardButton : MonoBehaviour
 {
@@ -15,7 +17,8 @@ public class KeyboardButton : MonoBehaviour
         if (buttonText.text.Length == 1)
         {
             NameToButtonText();
-            GetComponentInChildren<ButtonVR>().onRelease.AddListener(delegate { keyboard.InsertChar(buttonText.text); });
+            //GetComponentInChildren<ButtonVR>().onRelease.AddListener(delegate { keyboard.InsertChar(buttonText.text); });
+            GetComponent<XRBaseInteractable>().onSelectEntered.AddListener((XRBaseInteractor interactor) => keyboard.InsertChar(buttonText.text));
         }
     }
 

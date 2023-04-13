@@ -444,6 +444,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: EventSystem
       objectReference: {fileID: 0}
+    - target: {fileID: 4426115846718314380, guid: 40934ac1e2c3a3e48bbc3beb8b49afa5,
+        type: 3}
+      propertyPath: m_SubmitAction
+      value: 
+      objectReference: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
+    - target: {fileID: 4426115846718314380, guid: 40934ac1e2c3a3e48bbc3beb8b49afa5,
+        type: 3}
+      propertyPath: m_LeftClickAction
+      value: 
+      objectReference: {fileID: 187161793506945269, guid: c348712bda248c246b8c49b3db54643f,
+        type: 3}
     - target: {fileID: 9081919929483903123, guid: 40934ac1e2c3a3e48bbc3beb8b49afa5,
         type: 3}
       propertyPath: m_RootOrder
@@ -639,6 +651,11 @@ PrefabInstance:
       propertyPath: rightHandRay
       value: 
       objectReference: {fileID: 403047544}
+    - target: {fileID: 1680094970673967672, guid: 6a85161f56c253748af0c982008450d8,
+        type: 3}
+      propertyPath: onPress.m_PersistentCalls.m_Calls.Array.size
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2290520628059908939, guid: 6a85161f56c253748af0c982008450d8,
         type: 3}
       propertyPath: m_Layer

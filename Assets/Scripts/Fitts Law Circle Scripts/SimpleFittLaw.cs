@@ -30,32 +30,33 @@ public class SimpleFittLaw : MonoBehaviour
         sphere.GetComponent<Renderer>().material = material;
     }
 
-    void SpawnSpheres()
+void SpawnSpheres()
+{
+    float radius = 0.5f;
+    int correctSphereIndex = Random.Range(0, sphereCount);
+
+    for (int i = 0; i < sphereCount; i++)
     {
-        float radius = 0.5f;
-        int correctSphereIndex = Random.Range(0, sphereCount);
+        bool isCorrect = (i == correctSphereIndex);
+        GameObject sphere = Instantiate(spherePrefab, transform);
 
-        for (int i = 0; i < sphereCount; i++)
-        {
-            GameObject sphere = Instantiate(spherePrefab);
-            bool isCorrect = (i == correctSphereIndex);
-            SetSphereMaterial(sphere, isCorrect);
+        SetSphereMaterial(sphere, isCorrect);
 
-            float angle = (float)(i + 1) / sphereCount * Mathf.PI * 2f;
-            float x = Mathf.Sin(angle) * radius;
-            float y = Mathf.Cos(angle) * radius;
-            sphere.transform.position = new Vector3(x, y, 0f);
+        float angle = (float)(i + 1) / sphereCount * Mathf.PI * 2f;
+        float x = Mathf.Sin(angle) * radius;
+        float y = Mathf.Cos(angle) * radius;
+        sphere.transform.localPosition = new Vector3(x, y, 0f);
 
-            SimpleSphereHandler clickHandler = sphere.AddComponent<SimpleSphereHandler>();
-            clickHandler.sphereSelector = this.gameObject;
-            clickHandler.isCorrect = isCorrect;
-        }
+        SimpleSphereHandler clickHandler = sphere.GetComponent<SimpleSphereHandler>();
+        clickHandler.sphereSelector = this.gameObject;
+        clickHandler.isCorrect = isCorrect;
     }
+}
 
     public void SphereClicked(bool isCorrect)
     {
-        Debug.Log("Entered Sphere Clicked");
-        
+        Debug.Log("Entered Sphere Clicked: " + isCorrect);
+
         if (isCorrect)
         {
             foreach (Transform child in transform)
