@@ -25,16 +25,16 @@ public class TrackingInputData : MonoBehaviour
 
 
 
-            float xLeftPosition = 0f;
-            float yLeftPosition = 0f;
-            float zLeftPosition = 0f;
-            float xLeftRotation = 0f;
-            float yLeftRotation = 0f;
-            float zLeftRotation = 0f;
-private string fileName;
-private string filePath;
+    float xLeftPosition = 0f;
+    float yLeftPosition = 0f;
+    float zLeftPosition = 0f;
+    float xLeftRotation = 0f;
+    float yLeftRotation = 0f;
+    float zLeftRotation = 0f;
+    private string fileName;
+    private string filePath;
 
-private float elapsedTime = 0f;
+    private float elapsedTime = 0f;
 
 
 

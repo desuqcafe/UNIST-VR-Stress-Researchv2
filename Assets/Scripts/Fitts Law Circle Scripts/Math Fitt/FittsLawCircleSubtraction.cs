@@ -11,12 +11,14 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     public TMP_Text sphereTextPrefab;
 
     List<TMP_Text> sphereTexts = new List<TMP_Text>();
+    private List<GameObject> spheresList = new List<GameObject>(); // list to store all spawned spheres
+
 
     private int sphereCount = 0;
     private int correctAnswer = 1022;
     public int score = 0;
     private int roundCount = 0;
-    private int maxRounds = 5;
+    private int maxRounds = 20;
 
 
     public static FittsLawCircleSubtraction Instance; // singleton
@@ -73,6 +75,9 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         for (int i = 0; i < 9; i++)
         {
             GameObject sphere = Instantiate(spherePrefab);
+            spheresList.Add(sphere); // add to list to watch
+
+
             Debug.Log("Sphere instantiated: " + sphere.name);
 
             // Wrong answer spheres
@@ -186,10 +191,12 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
     public void ResetGame()
     {
-        foreach (Transform child in transform)
+        foreach (GameObject sphere in spheresList)
         {
-            Destroy(child.gameObject);
+            Destroy(sphere);
         }
+
+        spheresList.Clear();
 
         roundCount++;
         correctAnswer = 1022;

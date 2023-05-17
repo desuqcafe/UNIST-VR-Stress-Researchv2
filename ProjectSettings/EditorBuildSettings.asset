@@ -5,9 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/Keyboard Type Scene.unity
+    guid: f0a2a74084981f741a34de24edf0abf1
+  - enabled: 1
+    path: Assets/Scenes/Fitts Law Circle Scene.unity
+    guid: ee16bf536bb9434468401cd1542f0a3c
+  - enabled: 1
+    path: Assets/Scenes/Stroop Room Scene.unity
+    guid: c1b3549cbb6340d40a05ef610a92b8a1
   m_configObjects:
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: fc563927e2f154d4799223cafece4af2,
       type: 2}

@@ -8,6 +8,9 @@ public class FittsLawTarget : MonoBehaviour
     public Canvas valueCanvas;
     public bool correctSphere = false;
     private FittsLawCircleSubtraction fittsLawCircleSubtraction; // reference to FittsLawCircleSubtraction
+    private bool isBeingClicked = false;
+
+
 
     void Start()
     {
@@ -17,6 +20,13 @@ public class FittsLawTarget : MonoBehaviour
 
     public void SphereClicked()
     {
+        if (isBeingClicked) 
+        {
+            return;
+        }
+
+        isBeingClicked = true;
+
         if (correctSphere)
         {
             fittsLawCircleSubtraction.score++;
@@ -25,6 +35,9 @@ public class FittsLawTarget : MonoBehaviour
         else
         {
             Debug.Log("Incorrect Choice");
+            fittsLawCircleSubtraction.ResetGame();  // Call ResetGame when the sphere is not the correct one
         }
+        
+        isBeingClicked = false;
     }
 }
