@@ -44,7 +44,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0896b536cc274ab458578ccb67b1f61b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  targetPrefab: {fileID: 0}
-  theHolder: {fileID: 3542396648854163245}
-  radius: 0.65
-  numTargets: 9
+  spherePrefab: {fileID: 1693356663847262551, guid: 724f84e5b37db1244b370a117be0b730,
+    type: 3}
+  canvas: {fileID: 0}
+  sphereTextPrefab: {fileID: 0}
+  score: 0
