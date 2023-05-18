@@ -18,6 +18,17 @@ public class FittsLawTarget : MonoBehaviour
         fittsLawCircleSubtraction = FittsLawCircleSubtraction.Instance;
     }
 
+    public void onSphereSelected()
+    {
+        isBeingClicked = true;
+        SphereClicked();
+    }
+
+    void onSphereReleased()
+    {
+        isBeingClicked = false;
+    }
+
     public void SphereClicked()
     {
         if (isBeingClicked) 

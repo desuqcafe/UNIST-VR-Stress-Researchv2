@@ -18,7 +18,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     private int correctAnswer = 1022;
     public int score = 0;
     private int roundCount = 0;
-    private int maxRounds = 20;
+    private int maxRounds = 1000;
 
 
     public static FittsLawCircleSubtraction Instance; // singleton
