@@ -14,6 +14,9 @@ public class StroopRoomController : MonoBehaviour
     // public ObjectSelectedEvent OnCorrectObjectSelected;
     // public ObjectSelectedEvent OnIncorrectObjectSelected;
 
+    public bool trackErrorRateAndAccuracy = false;
+
+
 
     public GameObject[] objects;
     public Material[] materials;
@@ -21,6 +24,13 @@ public class StroopRoomController : MonoBehaviour
 
     private int matchedColorIndex;
     private int textColorIndex;
+    private int errors;
+    private int correctAnswers;
+    private int totalRounds; // Add a variable to set the number of rounds for the task
+
+    // Add variables to track startTime and taskTime
+    private float startTime;
+    private float taskTime;
 
     void Start()
     {
@@ -66,17 +76,54 @@ public class StroopRoomController : MonoBehaviour
 
     public void ObjectSelected(int index)
     {
-        // Get the clicked object's index
         int clickedIndex = objects[index].GetComponent<ObjectIndex>().index;
 
         if (clickedIndex == matchedColorIndex)
         {
-            // Correct object selected, start a new round
-            RandomizeColors();
+            correctAnswers++;
         }
         else
         {
-            // Incorrect object selected, you can implement additional logic here if needed
+            errors++;
         }
+
+        if (correctAnswers + errors >= totalRounds)
+        {
+            //
+        }
+        else
+        {
+            RandomizeColors();
+
+            if (trackErrorRateAndAccuracy)
+            {
+                CalculateErrorRateAndAccuracy();
+            }
+            
+            StartNewRound(); // Reset the startTime for the next round
+        }
+    }
+
+    private void CalculateErrorRateAndAccuracy()
+    {
+
+        // Calculate taskTime when the task is completed
+        taskTime = Time.time - startTime;
+
+        float errorRate = (float)errors / totalRounds;
+        float accuracy = (float)correctAnswers / totalRounds;
+
+        // Debug.Log("Error Rate: " + errorRate);
+        // Debug.Log("Accuracy: " + accuracy);
+        // Debug.Log("Task Time: " + taskTime);
+
+        string filePath = @"C:\Users\INTERACTIONS\Desktop\StroopRoomData.csv";
+        string data = $"{taskTime}, {errorRate}, {accuracy}";
+        EyeTrackingRecorder.WriteDataToFile(filePath, data);
+    }
+
+    public void StartNewRound()
+    {
+        startTime = Time.time;
     }
 }

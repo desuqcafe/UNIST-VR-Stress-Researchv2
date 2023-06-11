@@ -6,6 +6,13 @@ using System.Collections.Generic;
 
 public class FittsLawCircleSubtraction : MonoBehaviour
 {
+
+    public bool trackErrorRateAndAccuracy = false;
+
+    public GameObject spawnCenterObject;
+
+
+
     public GameObject spherePrefab;
     public Canvas canvas;
     public TMP_Text sphereTextPrefab;
@@ -19,6 +26,11 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     public int score = 0;
     private int roundCount = 0;
     private int maxRounds = 1000;
+
+    private float startTime;
+    private float taskTime;
+    private int errors = 0;
+    private int correctAnswers = 0;
 
 
     public static FittsLawCircleSubtraction Instance; // singleton
@@ -37,6 +49,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
     void Start()
     {
+        startTime = Time.time;
         SpawnSpheres();
     }
 
@@ -72,6 +85,9 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     void SpawnSpheres()
     {
         float radius = 0.5f;
+
+        Vector3 center = spawnCenterObject.transform.position;
+
         for (int i = 0; i < 9; i++)
         {
             GameObject sphere = Instantiate(spherePrefab);
@@ -90,10 +106,15 @@ public class FittsLawCircleSubtraction : MonoBehaviour
             }
             SetSphereText(sphere, wrongAnswer.ToString());
 
+            // float angle = (float)(i + 1) / 9f * Mathf.PI * 2f;
+            // float x = Mathf.Sin(angle) * radius;
+            // float y = Mathf.Cos(angle) * radius;
+            // sphere.transform.position = new Vector3(x, y, 0f);
+
             float angle = (float)(i + 1) / 9f * Mathf.PI * 2f;
             float x = Mathf.Sin(angle) * radius;
             float y = Mathf.Cos(angle) * radius;
-            sphere.transform.position = new Vector3(x, y, 0f);
+            sphere.transform.position = new Vector3(x + center.x, y + center.y, center.z);
         }
 
         // Randomly select a sphere to be the correct one
@@ -127,7 +148,23 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     public void ContinueGame(GameObject correctSphere)
     {
         roundCount++;
+        correctAnswers++;
         correctAnswer -= 13;
+
+
+
+        if (trackErrorRateAndAccuracy)
+        {
+            CalculateErrorRateAndAccuracy();
+        }
+        StartNewRound(); // Reset the startTime for the next round
+
+
+        Debug.Log("Next Round Started " + "\nRound Count: " + roundCount);
+        Debug.Log("CorrectAnswer: " + correctAnswer);
+
+
+
 
         if (roundCount > maxRounds)
         {
@@ -185,7 +222,30 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     }
 
 
+    public void SphereClickedIncorrect()
+    {
+        errors++;
+    }
 
+    public void StartNewRound()
+    {
+        startTime = Time.time;
+    }
+
+    private void CalculateErrorRateAndAccuracy()
+    {
+        taskTime = Time.time - startTime;
+        float errorRate = (float)errors / roundCount;
+        float accuracy = (float)correctAnswers / roundCount;
+
+        // Debug.Log("Task Time: " + taskTime);
+        // Debug.Log("Error Rate: " + errorRate);
+        // Debug.Log("Accuracy: " + accuracy);
+
+        string filePath = @"C:\Users\INTERACTIONS\Desktop\MathFittData.csv";
+        string data = $"{taskTime}, {errorRate}, {accuracy}";
+        EyeTrackingRecorder.WriteDataToFile(filePath, data);
+    }
 
 
 
@@ -212,6 +272,9 @@ public class FittsLawCircleSubtraction : MonoBehaviour
             sphereTexts.Clear();
             SpawnSpheres();
         }
+
+        StartNewRound(); // Reset the startTime for the next round
+
 
         Debug.Log("Game Reset");
     }

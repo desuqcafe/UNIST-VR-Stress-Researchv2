@@ -9,8 +9,25 @@ public class SimpleFittLaw : MonoBehaviour
     public Material correctMaterial;
     public Material incorrectMaterial;
 
+    private int errors;
+    private int correctAnswers;
+    private int totalRounds;
+    private float startTime;
+    private float taskTime;
+
+
+
+    public bool trackErrorRateAndAccuracy = false;
+
+
+
     void Start()
     {
+        SpawnSpheres();
+        errors = 0;
+        correctAnswers = 0;
+        totalRounds = 10;
+        startTime = Time.time;
         SpawnSpheres();
     }
 
@@ -59,13 +76,56 @@ void SpawnSpheres()
 
         if (isCorrect)
         {
+            correctAnswers++;
             foreach (Transform child in transform)
             {
                 Destroy(child.gameObject);
             }
 
-            SpawnSpheres();
+            if (correctAnswers + errors >= totalRounds)
+            {
+                    //
+
+            }
+            else
+            {
+                SpawnSpheres();
+                if (trackErrorRateAndAccuracy) 
+                {
+                    CalculateErrorRateAndAccuracy();
+                }
+                StartNewRound(); // Reset the startTime for the next round
+            }
         }
+        else
+        {
+            errors++;
+                if (trackErrorRateAndAccuracy) 
+                {
+                    CalculateErrorRateAndAccuracy();
+                }
+            StartNewRound(); // Reset the startTime for the next round
+        }
+    }
+
+    private void CalculateErrorRateAndAccuracy()
+    {
+        // Debug.Log("Task Time: " + taskTime);
+        // Debug.Log("Error Rate: " + errorRate);
+        // Debug.Log("Accuracy: " + accuracy);
+
+        taskTime = Time.time - startTime;
+        float errorRate = (float)errors / totalRounds;
+        float accuracy = (float)correctAnswers / totalRounds;
+
+        string filePath = @"C:\Users\INTERACTIONS\Desktop\SimpleFittData.csv";
+        string data = $"{taskTime}, {errorRate}, {accuracy}";
+        EyeTrackingRecorder.WriteDataToFile(filePath, data);
+    }
+
+    public void StartNewRound()
+    {
+        startTime = Time.time;
     }
 
 }

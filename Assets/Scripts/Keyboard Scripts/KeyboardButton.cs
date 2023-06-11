@@ -10,17 +10,48 @@ public class KeyboardButton : MonoBehaviour
     Keyboard keyboard;
     TextMeshProUGUI buttonText;
 
-    void Start()
+void Start()
+{
+    keyboard = GetComponentInParent<Keyboard>();
+    buttonText = GetComponentInChildren<TextMeshProUGUI>();
+    if (buttonText.text.Length == 1)
     {
-        keyboard = GetComponentInParent<Keyboard>();
-        buttonText = GetComponentInChildren<TextMeshProUGUI>();
-        if (buttonText.text.Length == 1)
-        {
-            NameToButtonText();
-            //GetComponentInChildren<ButtonVR>().onRelease.AddListener(delegate { keyboard.InsertChar(buttonText.text); });
-            GetComponent<XRBaseInteractable>().onSelectEntered.AddListener((XRBaseInteractor interactor) => keyboard.InsertChar(buttonText.text));
-        }
+        NameToButtonText();
+        GetComponent<XRBaseInteractable>().selectEntered.AddListener(OnSelectEntered);
     }
+    else if (gameObject.name == "Delete")
+    {
+        GetComponent<XRBaseInteractable>().selectEntered.AddListener(OnSelectEntered);
+    }
+    else if (gameObject.name == "Enter")
+    {
+        GetComponent<XRBaseInteractable>().selectEntered.AddListener(OnSelectEntered);
+    }
+    else if (gameObject.name == "Space")
+    {
+        GetComponent<XRBaseInteractable>().selectEntered.AddListener(OnSelectEntered);
+    }
+}
+
+public void OnSelectEntered(SelectEnterEventArgs args)
+{
+    if (buttonText.text.Length == 1)
+    {
+        keyboard.InsertChar(buttonText.text);
+    }
+    else if (gameObject.name == "Delete")
+    {
+        keyboard.InsertDelete();
+    }
+    else if (gameObject.name == "Enter")
+    {
+        keyboard.InsertEnter();
+    }
+    else if (gameObject.name == "Space")
+    {
+        keyboard.InsertSpace();
+    }
+}
 
     public void keyRayInsert()
     {

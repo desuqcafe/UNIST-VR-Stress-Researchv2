@@ -4,69 +4,100 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections;
 
-
 public class PhraseChecker : MonoBehaviour
 {
     public TMP_InputField inputField;
     public TextMeshProUGUI displayText;
-    public Image inputFieldBackground; // New: reference to the image that will change color
+    public Image inputFieldBackground;
 
-    private List<string> phrases = new List<string> { 
-        "hello my name is good", 
-        "what is up", 
-        "how are you", 
-        "what is your plan today" 
+    // Add variables to track startTime and taskTime
+    private float startTime;
+    private float taskTime;
+
+    public List<string> phrases = new List<string> {
+        "The boat floats on the water", 
+        "The cat chased the mouse", 
+        "The sun rises in the east", 
+        "The leaves fall from the trees in autumn",
+        "The stars shine brightly at night",
+        "The train travels along the tracks" 
     };
 
     private int currentPhraseIndex;
+    private int errors;
+    private int correctAnswers;
 
-    private void Start()
+    public void Start()
     {
         currentPhraseIndex = 0;
-        // Display the first phrase to type
+        errors = 0;
+        correctAnswers = 0;
         UpdateDisplayText();
-
-        // Start checking the input field every second
         InvokeRepeating(nameof(CheckInput), 1f, 1f);
+        startTime = Time.time;
     }
 
     public void CheckInput()
     {
         if (inputField.text == phrases[currentPhraseIndex])
         {
-            // Clear the input field
-            inputField.text = "";
-
-            // Update the current phrase index
-            currentPhraseIndex++;
-
-            // Show feedback
-            StartCoroutine(ShowFeedback());
-
-            // If there are still phrases left, update the display text with the new phrase
-            if (currentPhraseIndex < phrases.Count)
-            {
-                UpdateDisplayText();
-            }
-            else
-            {
-                // If there are no phrases left, you can handle this however you like
-                // This example simply clears the display text
-                displayText.text = "";
-            }
+            correctAnswers++;
+            NextPhrase();
+        }
+        else if (inputField.text.Length == phrases[currentPhraseIndex].Length)
+        {
+            errors++;
+            NextPhrase();
         }
     }
 
-    private void UpdateDisplayText()
+    public void NextPhrase()
+    {
+        inputField.text = "";
+        currentPhraseIndex++;
+
+        StartCoroutine(ShowFeedback());
+
+        if (currentPhraseIndex < phrases.Count)
+        {
+            UpdateDisplayText();
+
+            CalculateErrorRateAndAccuracy();
+            StartNewRound(); // Reset the startTime for the next round
+        }
+        else
+        {
+            displayText.text = "";
+        }
+    }
+
+    public void UpdateDisplayText()
     {
         displayText.text = phrases[currentPhraseIndex];
     }
 
-     // New: Coroutine to briefly change the image color to green
-    private IEnumerator ShowFeedback()
+    public IEnumerator ShowFeedback()
     {
         inputFieldBackground.color = Color.green;
-        yield return new WaitForSeconds(0.50f); // wait for 0.5 seconds
+        yield return new WaitForSeconds(0.50f);
         inputFieldBackground.color = Color.white;
+    }
+
+    public void CalculateErrorRateAndAccuracy()
+    {
+        // Calculate taskTime when the task is completed
+        taskTime = Time.time - startTime;
+
+        float errorRate = (float)errors / phrases.Count;
+        float accuracy = (float)correctAnswers / phrases.Count;
+
+        Debug.Log("Error Rate: " + errorRate);
+        Debug.Log("Accuracy: " + accuracy);
+        Debug.Log("Task Time: " + taskTime);
+    }
+
+    public void StartNewRound()
+    {
+        startTime = Time.time;
     }
 }

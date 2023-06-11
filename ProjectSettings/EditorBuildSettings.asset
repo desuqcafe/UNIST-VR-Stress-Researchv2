@@ -17,7 +17,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Stroop Room Scene.unity
     guid: c1b3549cbb6340d40a05ef610a92b8a1
+  - enabled: 1
+    path: Assets/Scenes/Interview Scene.unity
+    guid: d9a18193a9ed0ba4fa6adc7b69b5d2a0
   m_configObjects:
+    Unity.XR.Oculus.Settings: {fileID: 11400000, guid: 2ea1f300608986f46881a8e57f013853,
+      type: 2}
     com.unity.xr.management.loader_settings: {fileID: 11400000, guid: fc563927e2f154d4799223cafece4af2,
       type: 2}
     com.unity.xr.openxr.settings4: {fileID: 11400000, guid: 06f2f1b32700a004f919dfb09da2d683,

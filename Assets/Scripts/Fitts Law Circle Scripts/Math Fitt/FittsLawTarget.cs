@@ -31,7 +31,7 @@ public class FittsLawTarget : MonoBehaviour
 
     public void SphereClicked()
     {
-        if (isBeingClicked) 
+        if (isBeingClicked)
         {
             return;
         }
@@ -46,9 +46,10 @@ public class FittsLawTarget : MonoBehaviour
         else
         {
             Debug.Log("Incorrect Choice");
-            fittsLawCircleSubtraction.ResetGame();  // Call ResetGame when the sphere is not the correct one
+            fittsLawCircleSubtraction.SphereClickedIncorrect(); // Call SphereClickedIncorrect when the sphere is not the correct one
+            fittsLawCircleSubtraction.ResetGame();
         }
-        
+
         isBeingClicked = false;
     }
 }
