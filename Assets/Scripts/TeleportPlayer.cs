@@ -32,7 +32,7 @@ public class TeleportPlayer : MonoBehaviour
         }
     }
 
-    void TeleportToSpawnPoint(int index)
+    public void TeleportToSpawnPoint(int index) //
     {
         if (spawnPoints.Length > index)
         {
