@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.IO;
+using System.Collections;
 
 public class SimpleFittLaw : MonoBehaviour
 {
@@ -56,8 +57,10 @@ public class SimpleFittLaw : MonoBehaviour
         SpawnSpheres();
     }
 
-    void SetSphereMaterial(GameObject sphere, bool isCorrect)
+    IEnumerator SetSphereMaterialDelayed(GameObject sphere, bool isCorrect)
     {
+        yield return new WaitForSeconds(0.1f); // Adjust the delay as needed
+
         Material material;
 
         if (isCorrect)
@@ -82,7 +85,7 @@ public class SimpleFittLaw : MonoBehaviour
             bool isCorrect = (i == correctSphereIndex);
             GameObject sphere = Instantiate(spherePrefab, transform);
 
-            SetSphereMaterial(sphere, isCorrect);
+            StartCoroutine(SetSphereMaterialDelayed(sphere, isCorrect));
 
             float angle = (float)(i + 1) / sphereCount * Mathf.PI * 2f;
             float x = Mathf.Sin(angle) * radius;
