@@ -3,18 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.IO;
 // using UnityEngine.Events;
 
 public class StroopRoomController : MonoBehaviour
 {
 
+    private string folderPath;
+    private string timeStamp;
+    private string stroopRoomDataFilePath;
+
+    private List<string> stroopRoomDataBuffer = new List<string>();
+
+    private void Awake()
+    {
+        folderPath = Application.persistentDataPath;
+        timeStamp = System.DateTime.Now.ToString("HH-mm-ss");
+
+        stroopRoomDataFilePath = Path.Combine(folderPath, "stroopRoomData_" + timeStamp + ".csv");
+    }
+
     public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
 
     public bool trackErrorRateAndAccuracy = false;
     private int trialNumber;
-
-    string stroopRoomDataFilePath = @"/mnt/sdcard/stroopRoomData.csv";
-
     public GameObject[] objects;
     public Material[] materials;
     public TextMeshProUGUI word;
@@ -100,8 +112,9 @@ public class StroopRoomController : MonoBehaviour
 
         if (correctAnswers + errors >= totalRounds)
         {
-            //
+            WriteBufferedDataToFile(); // Add this line to write the buffered data
         }
+
         else
         {
             RandomizeColors();
@@ -125,8 +138,21 @@ public class StroopRoomController : MonoBehaviour
 
         string data = $"{trialNumber}, {taskTime}, {responseTime}, {errorRate}, {accuracy}";
 
-        EyeTrackingRecorder.WriteDataToFile(stroopRoomDataFilePath, data);
+        stroopRoomDataBuffer.Add(data);
     }
+
+    private void WriteBufferedDataToFile()
+    {
+        if (stroopRoomDataBuffer.Count > 0)
+        {
+            eyeTrackingRecorder.WriteDataToFileAsync(stroopRoomDataFilePath, stroopRoomDataBuffer);
+
+            // Clear the buffer
+            stroopRoomDataBuffer.Clear();
+        }
+    }
+
+
 
     public void StartNewRound()
     {

@@ -42,7 +42,7 @@ public class TrackingInputData : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        fileName = "BLeftControllerData.txt";
+        fileName = "HeadsetControllerData.txt";
         filePath = Application.dataPath + "/" + fileName;
         
         

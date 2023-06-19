@@ -3,11 +3,27 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using System.Collections;
+using System.IO;
+
 
 public class TranscriptionChecker : MonoBehaviour
 {
+    private string folderPath;
+    private string timeStamp;
+    private string transcriptionCheckFilePath;
+    
+    private List<string> transcriptionCheckDataBuffer = new List<string>();
+    
+    private void Awake()
+    {
+        folderPath = Application.persistentDataPath;
+        timeStamp = System.DateTime.Now.ToString("HH-mm-ss");
 
-    string transcriptionCheckFilePath = @"/mnt/sdcard/transcriptionCheckData.csv";
+        transcriptionCheckFilePath = Path.Combine(folderPath, "transcriptionCheckData_" + timeStamp + ".csv");
+    }
+
+    public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
+
 
     public bool trackErrorRateAndAccuracy = false;
 
@@ -52,6 +68,9 @@ public class TranscriptionChecker : MonoBehaviour
 
     public void Start()
     {
+        
+        eyeTrackingRecorder.currentTask = "Transcription";
+
         currentPhraseIndex = 0;
         errors = 0;
         correctAnswers = 0;
@@ -90,6 +109,7 @@ public class TranscriptionChecker : MonoBehaviour
                 CalculateErrorRateAndAccuracy();
             }
             StartNewRound();
+            WriteBufferedDataToFile(); // Add this line
         }
         else
         {
@@ -119,11 +139,23 @@ public class TranscriptionChecker : MonoBehaviour
         float accuracy = (float)correctAnswers / phrases.Count;
 
         string data = $"{trialNumber}, {timePerPhrase}, {backspaceCount}, {typingSpeed}, {taskTime}, {errorRate}, {accuracy}";
-        EyeTrackingRecorder.WriteDataToFile(transcriptionCheckFilePath, data);
+        transcriptionCheckDataBuffer.Add(data);
 
         trialNumber++; // Increment trial number
         backspaceCount = 0; // Reset the backspace count after recording the data
     }
+
+    private void WriteBufferedDataToFile()
+    {
+        if (transcriptionCheckDataBuffer.Count > 0)
+        {
+            eyeTrackingRecorder.WriteDataToFileAsync(transcriptionCheckFilePath, transcriptionCheckDataBuffer);
+
+            // Clear the buffer
+            transcriptionCheckDataBuffer.Clear();
+        }
+    }
+
 
     public void StartNewRound()
     {

@@ -3,12 +3,21 @@ using TMPro;
 using UnityEngine.XR.Interaction.Toolkit;
 using UnityEngine.InputSystem;
 using System.Collections.Generic;
+using System.IO;
+using System.Text;
+
 
 public class FittsLawCircleSubtraction : MonoBehaviour
 {
-    public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
 
-    string mathTaskStressFilePath = @"/mnt/sdcard/mathTaskStressData.csv";
+
+    private StringBuilder dataBuffer = new StringBuilder();
+
+    private string folderPath;
+    private string timeStamp;
+    private string mathTaskStressFilePath;
+
+    public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
 
     public bool trackErrorRateAndAccuracy = false;
 
@@ -45,6 +54,11 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
     private void Awake()
     {
+        folderPath = Application.persistentDataPath;
+        timeStamp = System.DateTime.Now.ToString("HH-mm-ss");
+
+        mathTaskStressFilePath = Path.Combine(folderPath, "simpleFittData_" + timeStamp + ".csv");
+
         if (Instance == null)
         {
             Instance = this;
@@ -148,7 +162,10 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         {
             CalculateErrorRateAndAccuracy();
         }
-        StartNewRound(); // Reset the startTime for the next round```
+
+        AppendDataToBuffer(roundCount, taskTime, errors, correctSphereGazeDurations[roundCount - 1], incorrectSphereGazeDurations[roundCount - 1], errorRates[roundCount - 1], accuracies[roundCount - 1]);
+
+        StartNewRound(); // Reset the startTime for the next round
     }
 
 
@@ -186,19 +203,23 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
     void SaveData()
     {
-        string header = "Round,Time,Incorrect Clicks,Correct Sphere Gaze Duration,Incorrect Sphere Gaze Duration";
-        string data = "";
+        string header = "Round,Time,Incorrect Clicks,Correct Sphere Gaze Duration,Incorrect Sphere Gaze Duration,Error Rate,Accuracy";
 
-        for (int i = 0; i < roundTimes.Count; i++)
-        {
-            data += $"{i + 1},{roundTimes[i]},{incorrectClicksPerRound[i]},{correctSphereGazeDurations[i]},{incorrectSphereGazeDurations[i]},{errorRates[i]},{accuracies[i]}\n";
-        }
-
-        EyeTrackingRecorder.WriteDataToFile(mathTaskStressFilePath, header);
-        EyeTrackingRecorder.WriteDataToFile(mathTaskStressFilePath, data);
+        EyeTrackingRecorder.Instance.WriteDataToFileAsync(mathTaskStressFilePath, new List<string> { header });
+        EyeTrackingRecorder.Instance.WriteDataToFileAsync(mathTaskStressFilePath, new List<string> { dataBuffer.ToString() });
 
         Debug.Log("Data saved to: " + mathTaskStressFilePath);
     }
+
+
+
+
+    void AppendDataToBuffer(int round, float time, int incorrectClicks, float correctGazeDuration, float incorrectGazeDuration, float errorRate, float accuracy)
+    {
+        dataBuffer.AppendLine($"{round},{time},{incorrectClicks},{correctGazeDuration},{incorrectGazeDuration},{errorRate},{accuracy}");
+    }
+
+
 
     public void RegisterError(GameObject incorrectSphere)
     {

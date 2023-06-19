@@ -3,9 +3,27 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
 using System.Collections;
+using System.IO;
 
 public class PhraseChecker : MonoBehaviour
 {
+
+    private string folderPath;
+    private string timeStamp;
+    private string phraseCheckerFilePath;
+
+    private List<string> phraseCheckerDataBuffer = new List<string>();
+
+    private void Awake()
+    {
+        folderPath = Application.persistentDataPath;
+        timeStamp = System.DateTime.Now.ToString("HH-mm-ss");
+
+        phraseCheckerFilePath = Path.Combine(folderPath, "transcriptionCheckData_" + timeStamp + ".csv");
+    }
+
+    public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
+
     public bool trackErrorRateAndAccuracy = false;
 
     public TMP_InputField inputField;
@@ -18,8 +36,6 @@ public class PhraseChecker : MonoBehaviour
     private float timePerPhrase;
     public int backspaceCount; // used in keyboard.cs
     private float typingSpeed;
-
-    string phraseCheckerFilePath = @"/mnt/sdcard/typingPhraseData.csv";
 
 
     public List<string> phrases = new List<string> {
@@ -37,6 +53,9 @@ public class PhraseChecker : MonoBehaviour
 
     public void Start()
     {
+
+        eyeTrackingRecorder.currentTask = "PhraseCheck";
+
         currentPhraseIndex = 0;
         errors = 0;
         correctAnswers = 0;
@@ -80,6 +99,7 @@ public class PhraseChecker : MonoBehaviour
                 CalculateErrorRateAndAccuracy();
             }
             StartNewRound();
+            WriteBufferedDataToFile(); // Add this line
         }
         else
         {
@@ -106,8 +126,20 @@ public class PhraseChecker : MonoBehaviour
         float accuracy = (float)correctAnswers / phrases.Count;
 
         string data = $"{trialNumber}, {timePerPhrase}, {backspaceCount}, {typingSpeed}, {taskTime}, {errorRate}, {accuracy}";
-        EyeTrackingRecorder.WriteDataToFile(phraseCheckerFilePath, data);
+        phraseCheckerDataBuffer.Add(data);
     }
+
+    private void WriteBufferedDataToFile()
+    {
+        if (phraseCheckerDataBuffer.Count > 0)
+        {
+            eyeTrackingRecorder.WriteDataToFileAsync(phraseCheckerFilePath, phraseCheckerDataBuffer);
+
+            // Clear the buffer
+            phraseCheckerDataBuffer.Clear();
+        }
+    }
+
 
     public void StartNewRound()
     {

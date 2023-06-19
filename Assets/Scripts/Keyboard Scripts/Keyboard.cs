@@ -113,8 +113,10 @@ public class Keyboard : MonoBehaviour
 
     public void InsertDelete()
     {
+        phraseChecker.backspaceCount++; // Add this line
+
         DelChar();
-            UpdateCaretPosition();
+        UpdateCaretPosition();
 
     }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
@@ -19,13 +20,45 @@ public class EyeTrackingRecorder : MonoBehaviour
     // 1 in FittLawCircleSubtraction
     // 1 in StroopRoomController
     // 1 in PhraseChecker
+    public static EyeTrackingRecorder Instance;
 
 
-    string eyeTrackingDataFilePath = @"/mnt/sdcard/eyeTrackingData.csv";
-    string headsetAndControllerDataFilePath = @"/mnt/sdcard/headsetAndControllerData.csv";
-    string headsetVelocityAndAccelerationDataFilePath = @"/mnt/sdcard/headsetVelocityAndAccelerationData.csv";
-
+    private string folderPath;
+    private string timeStamp;
+    private string eyeTrackingDataFilePath;
+    private string headsetAndControllerDataFilePath;
+    private string headsetVelocityAndAccelerationDataFilePath;
     public string currentTask { get; set; }
+
+    // Buffer to store data before writing to files
+    private List<string> eyeTrackingDataBuffer = new List<string>();
+    private List<string> headsetAndControllerDataBuffer = new List<string>();
+    private List<string> headsetVelocityAndAccelerationDataBuffer = new List<string>();
+
+    // Frame interval for writing data to the files
+    public int writeInterval = 60;
+    private int frameCounter = 0;
+
+
+    private void Awake()
+    {
+
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(this.gameObject);
+        }
+        folderPath = Application.persistentDataPath;
+        timeStamp = System.DateTime.Now.ToString("HH-mm-ss");
+
+        eyeTrackingDataFilePath = Path.Combine(folderPath, "eyeTrackingData_" + timeStamp + ".csv");
+        headsetAndControllerDataFilePath = Path.Combine(folderPath, "headsetAndControllerData_" + timeStamp + ".csv");
+        headsetVelocityAndAccelerationDataFilePath = Path.Combine(folderPath, "headsetVelocityAndAccelerationData_" + timeStamp + ".csv");
+    }
+
 
 
     // Reference to the OVREyeGaze script for left and right eyes
@@ -80,8 +113,8 @@ public class EyeTrackingRecorder : MonoBehaviour
         rightEyeGazeDirection = rightEyeGaze.transform.forward;
         rightEyeConfidence = rightEyeGaze.Confidence;
 
-        // Record eye tracking data
-        RecordEyeTrackingData();
+        // Buffer eye tracking data
+        BufferEyeTrackingData();
 
         // Get headset and controller positions and rotations
         headsetPosition = headsetTransform.position;
@@ -91,75 +124,77 @@ public class EyeTrackingRecorder : MonoBehaviour
         rightControllerPosition = rightControllerTransform.position;
         rightControllerRotation = rightControllerTransform.rotation;
 
-        // Record headset and controller data
-        RecordHeadsetAndControllerData();
+        // Buffer headset and controller data
+        BufferHeadsetAndControllerData();
 
         // Calculate headset velocity and acceleration
         Vector3 currentHeadsetPosition = headsetTransform.position;
         headsetVelocity = (currentHeadsetPosition - previousHeadsetPosition) / Time.deltaTime;
         headsetAcceleration = (headsetVelocity - previousHeadsetVelocity) / Time.deltaTime;
 
-        // Record headset velocity and acceleration data
-        RecordHeadsetVelocityAndAccelerationData();
+        // Buffer headset velocity and acceleration data
+        BufferHeadsetVelocityAndAccelerationData();
 
         // Update previous position and velocity values
         previousHeadsetPosition = currentHeadsetPosition;
         previousHeadsetVelocity = headsetVelocity;
+
+        frameCounter++;
+
+        if (frameCounter >= writeInterval)
+        {
+            // Write buffered data to the files
+            WriteDataToFileAsync(eyeTrackingDataFilePath, eyeTrackingDataBuffer);
+            WriteDataToFileAsync(headsetAndControllerDataFilePath, headsetAndControllerDataBuffer);
+            WriteDataToFileAsync(headsetVelocityAndAccelerationDataFilePath, headsetVelocityAndAccelerationDataBuffer);
+
+            // Clear the buffers
+            eyeTrackingDataBuffer.Clear();
+            headsetAndControllerDataBuffer.Clear();
+            headsetVelocityAndAccelerationDataBuffer.Clear();
+
+            // Reset the frame counter
+            frameCounter = 0;
+        }
+
+
     }
 
-    // Function to record eye tracking data
-    void RecordEyeTrackingData()
+    // Function to buffer eye tracking data
+    void BufferEyeTrackingData()
     {
-        // Here, you can save the eye tracking data to a file, send it to a server, or use it for further analysis
-        // Debug.Log("Left Eye Gaze Direction: " + leftEyeGazeDirection);
-        // Debug.Log("Right Eye Gaze Direction: " + rightEyeGazeDirection);
-        // Debug.Log("Left Eye Confidence: " + leftEyeConfidence);
-        // Debug.Log("Right Eye Confidence: " + rightEyeConfidence);
-
         string eyeTrackingData = $"{Time.time}, {currentTask}, {leftEyeGazeDirection}, {rightEyeGazeDirection}, {leftEyeConfidence}, {rightEyeConfidence}";
-
-        WriteDataToFile(eyeTrackingDataFilePath, eyeTrackingData);
+        eyeTrackingDataBuffer.Add(eyeTrackingData);
     }
 
-    // Function to record headset and controller data
-    void RecordHeadsetAndControllerData()
+    // Function to buffer headset and controller data
+    void BufferHeadsetAndControllerData()
     {
-        // Here, you can save the headset and controller data to a file, send it to a server, or use it for further analysis
-        // Debug.Log("Headset Position: " + headsetPosition);
-        // Debug.Log("Headset Rotation: " + headsetRotation);
-        // Debug.Log("Left Controller Position: " + leftControllerPosition);
-        // Debug.Log("Left Controller Rotation: " + leftControllerRotation);
-        // Debug.Log("Right Controller Position: " + rightControllerPosition);
-        // Debug.Log("Right Controller Rotation: " + rightControllerRotation);
-
         string headsetAndControllerData = $"{Time.time}, {currentTask}, {headsetPosition}, {headsetRotation}, {leftControllerPosition}, {leftControllerRotation}, {rightControllerPosition}, {rightControllerRotation}";
-        WriteDataToFile(headsetAndControllerDataFilePath, headsetAndControllerData);
-
+        headsetAndControllerDataBuffer.Add(headsetAndControllerData);
     }
 
-    void RecordHeadsetVelocityAndAccelerationData()
+    void BufferHeadsetVelocityAndAccelerationData()
     {
-        // // Here, you can save the headset velocity and acceleration data to a file, send it to a server, or use it for further analysis
-        // Debug.Log("Headset Velocity: " + headsetVelocity);
-        // Debug.Log("Headset Acceleration: " + headsetAcceleration);
-
         string headsetVelocityAndAccelerationData = $"{Time.time}, {currentTask}, {headsetVelocity}, {headsetAcceleration}";
-        WriteDataToFile(headsetVelocityAndAccelerationDataFilePath, headsetVelocityAndAccelerationData);
-
+        headsetVelocityAndAccelerationDataBuffer.Add(headsetVelocityAndAccelerationData);
     }
-
 
 
 
     // Write the data to file
 
-    public static void WriteDataToFile(string filePath, string data)
+    // Update the WriteDataToFile method to accept a List<string> instead of a single string
+    public async void WriteDataToFileAsync(string filePath, List<string> dataBuffer)
     {
         try
         {
             using (StreamWriter outputFile = new StreamWriter(filePath, true))
             {
-                outputFile.WriteLine(data);
+                foreach (string data in dataBuffer)
+                {
+                    await outputFile.WriteLineAsync(data);
+                }
             }
         }
         catch (Exception ex)

@@ -1,8 +1,24 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.IO;
 
 public class SimpleFittLaw : MonoBehaviour
 {
+
+    private string folderPath;
+    private string timeStamp;
+    private string fittTaskBaseFilePath;
+
+    private List<string> simpleFittDataBuffer = new List<string>();
+
+
+    private void Awake()
+    {
+        folderPath = Application.persistentDataPath;
+        timeStamp = System.DateTime.Now.ToString("HH-mm-ss");
+
+        fittTaskBaseFilePath = Path.Combine(folderPath, "simpleFittData_" + timeStamp + ".csv");
+    }
     public EyeTrackingRecorder eyeTrackingRecorder;
 
     public GameObject spherePrefab;
@@ -18,8 +34,6 @@ public class SimpleFittLaw : MonoBehaviour
     private float taskTime;
 
     public bool trackErrorRateAndAccuracy = false;
-
-    string fittTaskBaseFilePath = @"/mnt/sdcard/fittTaskBaseData.csv";
 
     // Additional data points
     private List<float> roundTimes = new List<float>();
@@ -100,7 +114,7 @@ public class SimpleFittLaw : MonoBehaviour
             else
             {
                 SpawnSpheres();
-                if (trackErrorRateAndAccuracy) 
+                if (trackErrorRateAndAccuracy)
                 {
                     CalculateErrorRateAndAccuracy();
                 }
@@ -110,7 +124,7 @@ public class SimpleFittLaw : MonoBehaviour
         else
         {
             errors++;
-            if (trackErrorRateAndAccuracy) 
+            if (trackErrorRateAndAccuracy)
             {
                 CalculateErrorRateAndAccuracy();
             }
@@ -124,9 +138,22 @@ public class SimpleFittLaw : MonoBehaviour
         float errorRate = (float)errors / totalRounds;
         float accuracy = (float)correctAnswers / totalRounds;
 
-        errorRates.Add(errorRate);
-        accuracies.Add(accuracy);
+        string data = $"{correctAnswers + errors}, {taskTime}, {errors}, {errorRate}, {accuracy}";
+        simpleFittDataBuffer.Add(data);
     }
+
+    private void WriteBufferedDataToFile()
+    {
+        if (simpleFittDataBuffer.Count > 0)
+        {
+            eyeTrackingRecorder.WriteDataToFileAsync(fittTaskBaseFilePath, simpleFittDataBuffer);
+            // Clear the buffer
+            simpleFittDataBuffer.Clear();
+        }
+    }
+
+
+
 
 
     public void RegisterGazeDuration(bool isCorrectSphere, float gazeDuration)
@@ -154,18 +181,15 @@ public class SimpleFittLaw : MonoBehaviour
         SaveData();
     }
 
+
     void SaveData()
     {
-        string header = "Round,Time,Incorrect Clicks,Correct Sphere Gaze Duration,Incorrect Sphere Gaze Duration,Error Rate,Accuracy";
-        string data = "";
+        string header = "Round,Time,Errors,Error Rate,Accuracy";
+        eyeTrackingRecorder.WriteDataToFileAsync(fittTaskBaseFilePath, new List<string> { header });
 
-        for (int i = 0; i < roundTimes.Count; i++)
-        {
-            data += $"{i + 1},{roundTimes[i]},{incorrectClicksPerRound[i]},{correctSphereGazeDurations[i]},{incorrectSphereGazeDurations[i]},{errorRates[i]},{accuracies[i]}\n";
-        }
-
-        EyeTrackingRecorder.WriteDataToFile(fittTaskBaseFilePath, header);
-        EyeTrackingRecorder.WriteDataToFile(fittTaskBaseFilePath, data);
+        WriteBufferedDataToFile(); // Write the buffered data to the file
     }
+
+
 
 }
