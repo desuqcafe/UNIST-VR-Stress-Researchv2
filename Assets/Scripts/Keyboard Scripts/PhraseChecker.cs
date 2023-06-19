@@ -6,21 +6,29 @@ using System.Collections;
 
 public class PhraseChecker : MonoBehaviour
 {
+    public bool trackErrorRateAndAccuracy = false;
+
     public TMP_InputField inputField;
     public TextMeshProUGUI displayText;
     public Image inputFieldBackground;
 
-    // Add variables to track startTime and taskTime
     private float startTime;
     private float taskTime;
+    private int trialNumber;
+    private float timePerPhrase;
+    public int backspaceCount; // used in keyboard.cs
+    private float typingSpeed;
+
+    string phraseCheckerFilePath = @"/mnt/sdcard/typingPhraseData.csv";
+
 
     public List<string> phrases = new List<string> {
-        "The boat floats on the water", 
-        "The cat chased the mouse", 
-        "The sun rises in the east", 
+        "The boat floats on the water",
+        "The cat chased the mouse",
+        "The sun rises in the east",
         "The leaves fall from the trees in autumn",
         "The stars shine brightly at night",
-        "The train travels along the tracks" 
+        "The train travels along the tracks"
     };
 
     private int currentPhraseIndex;
@@ -32,6 +40,7 @@ public class PhraseChecker : MonoBehaviour
         currentPhraseIndex = 0;
         errors = 0;
         correctAnswers = 0;
+        trialNumber = 0;
         UpdateDisplayText();
         InvokeRepeating(nameof(CheckInput), 1f, 1f);
         startTime = Time.time;
@@ -53,6 +62,10 @@ public class PhraseChecker : MonoBehaviour
 
     public void NextPhrase()
     {
+        trialNumber++;
+        timePerPhrase = Time.time - startTime;
+        typingSpeed = (inputField.text.Length / 5.0f) / (timePerPhrase / 60.0f);
+
         inputField.text = "";
         currentPhraseIndex++;
 
@@ -62,8 +75,11 @@ public class PhraseChecker : MonoBehaviour
         {
             UpdateDisplayText();
 
-            CalculateErrorRateAndAccuracy();
-            StartNewRound(); // Reset the startTime for the next round
+            if (trackErrorRateAndAccuracy)
+            {
+                CalculateErrorRateAndAccuracy();
+            }
+            StartNewRound();
         }
         else
         {
@@ -85,15 +101,12 @@ public class PhraseChecker : MonoBehaviour
 
     public void CalculateErrorRateAndAccuracy()
     {
-        // Calculate taskTime when the task is completed
         taskTime = Time.time - startTime;
-
         float errorRate = (float)errors / phrases.Count;
         float accuracy = (float)correctAnswers / phrases.Count;
 
-        Debug.Log("Error Rate: " + errorRate);
-        Debug.Log("Accuracy: " + accuracy);
-        Debug.Log("Task Time: " + taskTime);
+        string data = $"{trialNumber}, {timePerPhrase}, {backspaceCount}, {typingSpeed}, {taskTime}, {errorRate}, {accuracy}";
+        EyeTrackingRecorder.WriteDataToFile(phraseCheckerFilePath, data);
     }
 
     public void StartNewRound()

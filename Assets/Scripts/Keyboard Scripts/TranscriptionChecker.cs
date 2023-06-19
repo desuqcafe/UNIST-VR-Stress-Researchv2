@@ -7,14 +7,14 @@ using System.Collections;
 public class TranscriptionChecker : MonoBehaviour
 {
 
-    public bool trackErrorRateAndAccuracy = false;
+    string transcriptionCheckFilePath = @"/mnt/sdcard/transcriptionCheckData.csv";
 
+    public bool trackErrorRateAndAccuracy = false;
 
     public TMP_InputField inputField;
     public TextMeshProUGUI displayText;
     public Image inputFieldBackground;
 
-    // Add variables to track startTime and taskTime
     private float startTime;
     private float taskTime;
 
@@ -43,20 +43,27 @@ public class TranscriptionChecker : MonoBehaviour
     private int currentPhraseIndex;
     private int errors;
     private int correctAnswers;
+    private int backspaceCount;
+
+    // Add new variables
+    private int trialNumber;
+    private float timePerPhrase;
+    private float typingSpeed;
 
     public void Start()
     {
         currentPhraseIndex = 0;
         errors = 0;
         correctAnswers = 0;
+        backspaceCount = 0;
+        trialNumber = 1;
         UpdateDisplayText();
-        InvokeRepeating(nameof(CheckInput), 1f, 1f);
         startTime = Time.time;
     }
 
     public void CheckInput()
     {
-        if (inputField.text == phrasesSecret[currentPhraseIndex]) // Compare with phrasesSecret instead of phrases
+        if (inputField.text == phrasesSecret[currentPhraseIndex])
         {
             correctAnswers++;
         }
@@ -68,6 +75,7 @@ public class TranscriptionChecker : MonoBehaviour
 
     public void NextPhrase()
     {
+        CheckInput();
         inputField.text = "";
         currentPhraseIndex++;
 
@@ -81,7 +89,7 @@ public class TranscriptionChecker : MonoBehaviour
             {
                 CalculateErrorRateAndAccuracy();
             }
-            StartNewRound(); // Reset the startTime for the next round
+            StartNewRound();
         }
         else
         {
@@ -103,23 +111,27 @@ public class TranscriptionChecker : MonoBehaviour
 
     public void CalculateErrorRateAndAccuracy()
     {
-        // Calculate taskTime when the task is completed
         taskTime = Time.time - startTime;
+        timePerPhrase = taskTime / phrases.Count;
+        typingSpeed = (float)inputField.text.Length / taskTime;
 
         float errorRate = (float)errors / phrases.Count;
         float accuracy = (float)correctAnswers / phrases.Count;
 
-        // Debug.Log("Error Rate: " + errorRate);
-        // Debug.Log("Accuracy: " + accuracy);
-        // Debug.Log("Task Time: " + taskTime);
+        string data = $"{trialNumber}, {timePerPhrase}, {backspaceCount}, {typingSpeed}, {taskTime}, {errorRate}, {accuracy}";
+        EyeTrackingRecorder.WriteDataToFile(transcriptionCheckFilePath, data);
 
-        string filePath = @"C:\Users\INTERACTIONS\Desktop\TranscriptionData.csv";
-        string data = $"{taskTime}, {errorRate}, {accuracy}";
-        EyeTrackingRecorder.WriteDataToFile(filePath, data);
+        trialNumber++; // Increment trial number
+        backspaceCount = 0; // Reset the backspace count after recording the data
     }
 
     public void StartNewRound()
     {
         startTime = Time.time;
+    }
+
+    public void IncrementBackspaceCount()
+    {
+        backspaceCount++;
     }
 }

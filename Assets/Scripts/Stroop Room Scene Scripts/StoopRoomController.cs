@@ -8,15 +8,12 @@ using TMPro;
 public class StroopRoomController : MonoBehaviour
 {
 
-    // [System.Serializable]
-    // public class ObjectSelectedEvent : UnityEvent<GameObject> { }
-
-    // public ObjectSelectedEvent OnCorrectObjectSelected;
-    // public ObjectSelectedEvent OnIncorrectObjectSelected;
+    public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
 
     public bool trackErrorRateAndAccuracy = false;
+    private int trialNumber;
 
-
+    string stroopRoomDataFilePath = @"/mnt/sdcard/stroopRoomData.csv";
 
     public GameObject[] objects;
     public Material[] materials;
@@ -32,8 +29,14 @@ public class StroopRoomController : MonoBehaviour
     private float startTime;
     private float taskTime;
 
+    private float trialStartTime;
+    private float responseTime;
+
+
     void Start()
     {
+        eyeTrackingRecorder.currentTask = "StroopRoom";
+
         RandomizeColors();
     }
 
@@ -72,11 +75,19 @@ public class StroopRoomController : MonoBehaviour
 
         // Set the text color to the matched color
         word.color = matchedColor;
+
+        // Set the trial start time
+        trialStartTime = Time.time;
     }
 
     public void ObjectSelected(int index)
     {
+        trialNumber++; // Increment the trial number
+
         int clickedIndex = objects[index].GetComponent<ObjectIndex>().index;
+
+        responseTime = Time.time - trialStartTime;
+
 
         if (clickedIndex == matchedColorIndex)
         {
@@ -106,20 +117,15 @@ public class StroopRoomController : MonoBehaviour
 
     private void CalculateErrorRateAndAccuracy()
     {
-
         // Calculate taskTime when the task is completed
         taskTime = Time.time - startTime;
 
         float errorRate = (float)errors / totalRounds;
         float accuracy = (float)correctAnswers / totalRounds;
 
-        // Debug.Log("Error Rate: " + errorRate);
-        // Debug.Log("Accuracy: " + accuracy);
-        // Debug.Log("Task Time: " + taskTime);
+        string data = $"{trialNumber}, {taskTime}, {responseTime}, {errorRate}, {accuracy}";
 
-        string filePath = @"C:\Users\INTERACTIONS\Desktop\StroopRoomData.csv";
-        string data = $"{taskTime}, {errorRate}, {accuracy}";
-        EyeTrackingRecorder.WriteDataToFile(filePath, data);
+        EyeTrackingRecorder.WriteDataToFile(stroopRoomDataFilePath, data);
     }
 
     public void StartNewRound()

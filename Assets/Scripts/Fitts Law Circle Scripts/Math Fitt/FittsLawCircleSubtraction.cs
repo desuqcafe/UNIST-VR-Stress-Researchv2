@@ -6,12 +6,13 @@ using System.Collections.Generic;
 
 public class FittsLawCircleSubtraction : MonoBehaviour
 {
+    public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
+
+    string mathTaskStressFilePath = @"/mnt/sdcard/mathTaskStressData.csv";
 
     public bool trackErrorRateAndAccuracy = false;
 
     public GameObject spawnCenterObject;
-
-
 
     public GameObject spherePrefab;
     public Canvas canvas;
@@ -19,7 +20,6 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
     List<TMP_Text> sphereTexts = new List<TMP_Text>();
     private List<GameObject> spheresList = new List<GameObject>(); // list to store all spawned spheres
-
 
     private int sphereCount = 0;
     private int correctAnswer = 1022;
@@ -32,8 +32,16 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     private int errors = 0;
     private int correctAnswers = 0;
 
-
     public static FittsLawCircleSubtraction Instance; // singleton
+
+    // Additional data points
+    private List<float> roundTimes = new List<float>();
+    private List<int> incorrectClicksPerRound = new List<int>();
+    private List<float> correctSphereGazeDurations = new List<float>();
+    private List<float> incorrectSphereGazeDurations = new List<float>();
+    
+    private List<float> errorRates = new List<float>();
+    private List<float> accuracies = new List<float>();
 
     private void Awake()
     {
@@ -49,6 +57,8 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
     void Start()
     {
+        eyeTrackingRecorder.currentTask = "MathTaskStress";
+
         startTime = Time.time;
         SpawnSpheres();
     }
@@ -78,10 +88,6 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         }
     }
 
-
-
-
-
     void SpawnSpheres()
     {
         float radius = 0.5f;
@@ -92,7 +98,6 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         {
             GameObject sphere = Instantiate(spherePrefab);
             spheresList.Add(sphere); // add to list to watch
-
 
             Debug.Log("Sphere instantiated: " + sphere.name);
 
@@ -105,11 +110,6 @@ public class FittsLawCircleSubtraction : MonoBehaviour
                 wrongAnswer = Random.Range(min, max);
             }
             SetSphereText(sphere, wrongAnswer.ToString());
-
-            // float angle = (float)(i + 1) / 9f * Mathf.PI * 2f;
-            // float x = Mathf.Sin(angle) * radius;
-            // float y = Mathf.Cos(angle) * radius;
-            // sphere.transform.position = new Vector3(x, y, 0f);
 
             float angle = (float)(i + 1) / 9f * Mathf.PI * 2f;
             float x = Mathf.Sin(angle) * radius;
@@ -136,146 +136,99 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         Debug.Log("CorrectAnswer: " + correctAnswer);
     }
 
-    // void Update()
-    // {
-    //     if (Keyboard.current.eKey.wasPressedThisFrame)
-    //     {
-    //         deepBreathCoRoutine();
-    //     }
-    // }
-
-
     public void ContinueGame(GameObject correctSphere)
     {
         roundCount++;
         correctAnswers++;
         correctAnswer -= 13;
-
-
+        roundTimes.Add(taskTime);
+        incorrectClicksPerRound.Add(errors);
 
         if (trackErrorRateAndAccuracy)
         {
             CalculateErrorRateAndAccuracy();
         }
-        StartNewRound(); // Reset the startTime for the next round
+        StartNewRound(); // Reset the startTime for the next round```
+    }
 
-
-        Debug.Log("Next Round Started " + "\nRound Count: " + roundCount);
-        Debug.Log("CorrectAnswer: " + correctAnswer);
-
-
-
-
-        if (roundCount > maxRounds)
+     void StartNewRound()
+    {
+        if (roundCount < maxRounds)
         {
-            // gameOverText.text = "Game over! Final score: " + score;
+            startTime = Time.time;
+            errors = 0;
+
+            // Delete previous spheres
+            foreach (GameObject sphere in spheresList)
+            {
+                Destroy(sphere);
+            }
+            spheresList.Clear();
+            sphereTexts.Clear();
+
+            // Spawn new spheres
+            SpawnSpheres();
         }
         else
         {
-            // Choose a new correct sphere index randomly
-            int newCorrectIndex = Random.Range(0, sphereTexts.Count);
-
-            for (int i = 0; i < sphereTexts.Count; i++)
-            {
-                TMP_Text sphereText = sphereTexts[i];
-                GameObject sphere = sphereText.transform.parent.parent.gameObject;
-                FittsLawTarget fittsLawTarget = sphere.GetComponent<FittsLawTarget>();
-
-                // Check if the fittsLawTarget component exists
-                if (fittsLawTarget == null)
-                {
-                    Debug.LogError("FittsLawTarget component not found on the sphere object.");
-                    continue;
-                }
-
-                FittsLawTarget correctFittsLawTarget = correctSphere.GetComponent<FittsLawTarget>();
-                if (fittsLawTarget == correctFittsLawTarget)
-                {
-                    // Set the previously correct sphere to false
-                    fittsLawTarget.correctSphere = false;
-                }
-
-                // If current index is the new correct index, set correctSphere to true
-                if (i == newCorrectIndex)
-                {
-                    fittsLawTarget.correctSphere = true;
-                    sphereText.text = correctAnswer.ToString();
-                }
-                else
-                {
-                    fittsLawTarget.correctSphere = false;
-                    int min = correctAnswer - 15;
-                    int max = correctAnswer + 15;
-                    int wrongAnswer = Random.Range(min, max);
-                    while (wrongAnswer == correctAnswer)
-                    {
-                        wrongAnswer = Random.Range(min, max);
-                    }
-
-                    sphereText.text = wrongAnswer.ToString();
-                }
-            }
+            EndGame();
         }
-
-        Debug.Log("Next Round Started " + "\nRound Count: " + roundCount);
-        Debug.Log("CorrectAnswer: " + correctAnswer);
     }
 
+    void EndGame()
+    {
+        Debug.Log("Game Over!");
 
-    public void SphereClickedIncorrect()
+        // Save the additional data points to a file
+        SaveData();
+    }
+
+    void SaveData()
+    {
+        string header = "Round,Time,Incorrect Clicks,Correct Sphere Gaze Duration,Incorrect Sphere Gaze Duration";
+        string data = "";
+
+        for (int i = 0; i < roundTimes.Count; i++)
+        {
+            data += $"{i + 1},{roundTimes[i]},{incorrectClicksPerRound[i]},{correctSphereGazeDurations[i]},{incorrectSphereGazeDurations[i]},{errorRates[i]},{accuracies[i]}\n";
+        }
+
+        EyeTrackingRecorder.WriteDataToFile(mathTaskStressFilePath, header);
+        EyeTrackingRecorder.WriteDataToFile(mathTaskStressFilePath, data);
+
+        Debug.Log("Data saved to: " + mathTaskStressFilePath);
+    }
+
+    public void RegisterError(GameObject incorrectSphere)
     {
         errors++;
     }
 
-    public void StartNewRound()
+    void CalculateErrorRateAndAccuracy()
     {
-        startTime = Time.time;
+        float errorRate = (float)errors / (float)(errors + correctAnswers) * 100f;
+        float accuracy = (float)correctAnswers / (float)(errors + correctAnswers) * 100f;
+
+        errorRates.Add(errorRate);
+        accuracies.Add(accuracy);
+
+        Debug.Log($"Error Rate: {errorRate}% | Accuracy: {accuracy}%");
     }
 
-    private void CalculateErrorRateAndAccuracy()
+    public void RegisterGazeDuration(bool isCorrectSphere, float gazeDuration)
     {
-        taskTime = Time.time - startTime;
-        float errorRate = (float)errors / roundCount;
-        float accuracy = (float)correctAnswers / roundCount;
-
-        // Debug.Log("Task Time: " + taskTime);
-        // Debug.Log("Error Rate: " + errorRate);
-        // Debug.Log("Accuracy: " + accuracy);
-
-        string filePath = @"C:\Users\INTERACTIONS\Desktop\MathFittData.csv";
-        string data = $"{taskTime}, {errorRate}, {accuracy}";
-        EyeTrackingRecorder.WriteDataToFile(filePath, data);
-    }
-
-
-
-    public void ResetGame()
-    {
-        foreach (GameObject sphere in spheresList)
+        if (isCorrectSphere)
         {
-            Destroy(sphere);
-        }
-
-        spheresList.Clear();
-
-        roundCount++;
-        correctAnswer = 1022;
-
-        if (roundCount > maxRounds)
-        {
-            // gameOverText.text = "Game over! Final score: " + score;
+            correctSphereGazeDurations.Add(gazeDuration);
         }
         else
         {
-            sphereCount = 0;
-            score = 0;
-            sphereTexts.Clear();
-            SpawnSpheres();
+            incorrectSphereGazeDurations.Add(gazeDuration);
         }
+    }
 
-        StartNewRound(); // Reset the startTime for the next round
-
-
-        Debug.Log("Game Reset");
+    void Update()
+    {
+        taskTime = Time.time - startTime;
     }
 }
