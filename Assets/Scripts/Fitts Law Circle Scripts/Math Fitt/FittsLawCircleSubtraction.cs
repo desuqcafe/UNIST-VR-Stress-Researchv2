@@ -151,7 +151,8 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         StartNewRound(); // Reset the startTime for the next round```
     }
 
-     void StartNewRound()
+
+    public void StartNewRound()
     {
         if (roundCount < maxRounds)
         {
@@ -175,7 +176,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         }
     }
 
-    void EndGame()
+    public void EndGame()
     {
         Debug.Log("Game Over!");
 

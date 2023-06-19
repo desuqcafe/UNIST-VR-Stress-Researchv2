@@ -5,6 +5,29 @@ using UnityEngine;
 
 public class EyeTrackingRecorder : MonoBehaviour
 {
+
+    // Teleporting Controls:  Q W E R 
+
+
+
+
+
+
+    // 6 File Paths to change for file writing 
+    // 3 in EyeTracking Recorder
+    // 1 in SimpleFittLaw
+    // 1 in FittLawCircleSubtraction
+    // 1 in StroopRoomController
+    // 1 in PhraseChecker
+
+
+    string eyeTrackingDataFilePath = @"/mnt/sdcard/eyeTrackingData.csv";
+    string headsetAndControllerDataFilePath = @"/mnt/sdcard/headsetAndControllerData.csv";
+    string headsetVelocityAndAccelerationDataFilePath = @"/mnt/sdcard/headsetVelocityAndAccelerationData.csv";
+
+    public string currentTask { get; set; }
+
+
     // Reference to the OVREyeGaze script for left and right eyes
     public OVREyeGaze leftEyeGaze;
     public OVREyeGaze rightEyeGaze;
@@ -93,9 +116,9 @@ public class EyeTrackingRecorder : MonoBehaviour
         // Debug.Log("Left Eye Confidence: " + leftEyeConfidence);
         // Debug.Log("Right Eye Confidence: " + rightEyeConfidence);
 
-        string filePath = @"C:\Users\INTERACTIONS\Desktop\eyeTrackingData.csv";
-        string data = $"{leftEyeGazeDirection}, {rightEyeGazeDirection}, {leftEyeConfidence}, {rightEyeConfidence}";
-        WriteDataToFile(filePath, data);
+        string eyeTrackingData = $"{Time.time}, {currentTask}, {leftEyeGazeDirection}, {rightEyeGazeDirection}, {leftEyeConfidence}, {rightEyeConfidence}";
+
+        WriteDataToFile(eyeTrackingDataFilePath, eyeTrackingData);
     }
 
     // Function to record headset and controller data
@@ -109,9 +132,9 @@ public class EyeTrackingRecorder : MonoBehaviour
         // Debug.Log("Right Controller Position: " + rightControllerPosition);
         // Debug.Log("Right Controller Rotation: " + rightControllerRotation);
 
-        string filePath = @"C:\Users\INTERACTIONS\Desktop\headsetAndControllerData.csv";
-        string data = $"{headsetPosition}, {headsetRotation}, {leftControllerPosition}, {leftControllerRotation}, {rightControllerPosition}, {rightControllerRotation}";
-        WriteDataToFile(filePath, data);
+        string headsetAndControllerData = $"{Time.time}, {currentTask}, {headsetPosition}, {headsetRotation}, {leftControllerPosition}, {leftControllerRotation}, {rightControllerPosition}, {rightControllerRotation}";
+        WriteDataToFile(headsetAndControllerDataFilePath, headsetAndControllerData);
+
     }
 
     void RecordHeadsetVelocityAndAccelerationData()
@@ -120,9 +143,9 @@ public class EyeTrackingRecorder : MonoBehaviour
         // Debug.Log("Headset Velocity: " + headsetVelocity);
         // Debug.Log("Headset Acceleration: " + headsetAcceleration);
 
-        string filePath = @"C:\Users\INTERACTIONS\Desktop\headsetVelocityAndAccelerationData.csv";
-        string data = $"{headsetVelocity}, {headsetAcceleration}";
-        WriteDataToFile(filePath, data);
+        string headsetVelocityAndAccelerationData = $"{Time.time}, {currentTask}, {headsetVelocity}, {headsetAcceleration}";
+        WriteDataToFile(headsetVelocityAndAccelerationDataFilePath, headsetVelocityAndAccelerationData);
+
     }
 
 
