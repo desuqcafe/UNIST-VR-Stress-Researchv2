@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
+
 public class EyeTrackingRecorder : MonoBehaviour
 {
 
@@ -22,6 +23,7 @@ public class EyeTrackingRecorder : MonoBehaviour
     // 1 in PhraseChecker
     public static EyeTrackingRecorder Instance;
 
+    public TMPro.TextMeshProUGUI filePathText;
 
     private string folderPath;
     private string timeStamp;
@@ -57,6 +59,15 @@ public class EyeTrackingRecorder : MonoBehaviour
         eyeTrackingDataFilePath = Path.Combine(folderPath, "eyeTrackingData_" + timeStamp + ".csv");
         headsetAndControllerDataFilePath = Path.Combine(folderPath, "headsetAndControllerData_" + timeStamp + ".csv");
         headsetVelocityAndAccelerationDataFilePath = Path.Combine(folderPath, "headsetVelocityAndAccelerationData_" + timeStamp + ".csv");
+
+        if (File.Exists(eyeTrackingDataFilePath))
+        {
+            filePathText.text = "Eye tracking data file path: " + eyeTrackingDataFilePath;
+        }
+        else
+        {
+            filePathText.text = "File does not exist: " + eyeTrackingDataFilePath;
+        }
     }
 
 
