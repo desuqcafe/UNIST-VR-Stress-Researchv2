@@ -12,6 +12,8 @@ public class StroopRoomController : MonoBehaviour
     private string folderPath;
     private string timeStamp;
     private string stroopRoomDataFilePath;
+    public int totalRounds = 50; // Set a default value or make it configurable in the inspector
+
 
     private List<string> stroopRoomDataBuffer = new List<string>();
 
@@ -35,7 +37,6 @@ public class StroopRoomController : MonoBehaviour
     private int textColorIndex;
     private int errors;
     private int correctAnswers;
-    private int totalRounds; // Add a variable to set the number of rounds for the task
 
     // Add variables to track startTime and taskTime
     private float startTime;
@@ -126,6 +127,10 @@ public class StroopRoomController : MonoBehaviour
             
             StartNewRound(); // Reset the startTime for the next round
         }
+
+        Debug.Log("Clicked Index: " + clickedIndex);
+        Debug.Log("Matched Index: " + matchedColorIndex);
+        Debug.Log("Total Rounds: " + totalRounds);
     }
 
     private void CalculateErrorRateAndAccuracy()

@@ -163,10 +163,16 @@ public class FittsLawCircleSubtraction : MonoBehaviour
             CalculateErrorRateAndAccuracy();
         }
 
-        AppendDataToBuffer(roundCount, taskTime, errors, correctSphereGazeDurations[roundCount - 1], incorrectSphereGazeDurations[roundCount - 1], errorRates[roundCount - 1], accuracies[roundCount - 1]);
+        float correctSphereGazeDuration = (correctSphereGazeDurations.Count > roundCount - 1) ? correctSphereGazeDurations[roundCount - 1] : 0;
+        float incorrectSphereGazeDuration = (incorrectSphereGazeDurations.Count > roundCount - 1) ? incorrectSphereGazeDurations[roundCount - 1] : 0;
+        float errorRate = (errorRates.Count > roundCount - 1) ? errorRates[roundCount - 1] : 0;
+        float accuracy = (accuracies.Count > roundCount - 1) ? accuracies[roundCount - 1] : 0;
+
+        AppendDataToBuffer(roundCount, taskTime, errors, correctSphereGazeDuration, incorrectSphereGazeDuration, errorRate, accuracy);
 
         StartNewRound(); // Reset the startTime for the next round
     }
+
 
 
     public void StartNewRound()
@@ -224,6 +230,8 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     public void RegisterError(GameObject incorrectSphere)
     {
         errors++;
+        score--; // decrease the score
+        StartNewRound(); // reset the game
     }
 
     void CalculateErrorRateAndAccuracy()

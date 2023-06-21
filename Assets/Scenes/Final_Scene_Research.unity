@@ -975,6 +975,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a15043d9b298d740add1de58c1f6b47, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  writeInterval: 60
   leftEyeGaze: {fileID: 1894779905}
   rightEyeGaze: {fileID: 1894779903}
   headsetTransform: {fileID: 1894779900}
@@ -992,11 +993,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bbd1bfbb31c683844ade1aea484f01e6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  teleportPlayer: {fileID: 1095194628}
   simpleFittLaw: {fileID: 994871151}
   phraseChecker: {fileID: 824396582}
   transcriptionChecker: {fileID: 1432228123}
   MathTaskStress: {fileID: 960214957}
   stroopRoomTask: {fileID: 985258447}
+  taskName: 
 --- !u!1 &75471843
 GameObject:
   m_ObjectHideFlags: 0
@@ -1055,7 +1058,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Math Task
+  m_text: Transcription
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -7437,10 +7440,10 @@ GameObject:
   - component: {fileID: 816408840}
   - component: {fileID: 816408839}
   - component: {fileID: 816408838}
-  - component: {fileID: 816408837}
   - component: {fileID: 816408836}
   - component: {fileID: 816408835}
   - component: {fileID: 816408834}
+  - component: {fileID: 816408841}
   m_Layer: 0
   m_Name: SceneSwitcher-Math
   m_TagString: Untagged
@@ -7486,7 +7489,7 @@ MonoBehaviour:
   _whenSelect:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 816408837}
+      - m_Target: {fileID: 816408841}
         m_TargetAssemblyTypeName: TaskTrigger, Assembly-CSharp
         m_MethodName: OnSelectDoSomething
         m_Mode: 1
@@ -7547,20 +7550,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _collider: {fileID: 816408838}
---- !u!114 &816408837
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 816408832}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1ca77ad222c1244489935b0ae646909, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  taskManager: {fileID: 73786177}
-  taskName: MathTaskStress
 --- !u!65 &816408838
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -7632,6 +7621,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 816408832}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &816408841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 816408832}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1ca77ad222c1244489935b0ae646909, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  taskManager: {fileID: 73786177}
+  taskName: MathTaskStress
 --- !u!1001 &824396581
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -9502,7 +9505,7 @@ PrefabInstance:
     - target: {fileID: 4038816849703041643, guid: b887a69b204caf54e92e8e2323d41c0b,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 8.756
+      value: 8.86
       objectReference: {fileID: 0}
     - target: {fileID: 4038816849703041643, guid: b887a69b204caf54e92e8e2323d41c0b,
         type: 3}
@@ -20805,12 +20808,12 @@ PrefabInstance:
     - target: {fileID: 6940859400442458798, guid: bb1a18667128b7c49b1fa6ad25f83866,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: -0.664
+      value: -0.07
       objectReference: {fileID: 0}
     - target: {fileID: 6940859400442458798, guid: bb1a18667128b7c49b1fa6ad25f83866,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.365
+      value: -1.787
       objectReference: {fileID: 0}
     - target: {fileID: 6940859400442458798, guid: bb1a18667128b7c49b1fa6ad25f83866,
         type: 3}

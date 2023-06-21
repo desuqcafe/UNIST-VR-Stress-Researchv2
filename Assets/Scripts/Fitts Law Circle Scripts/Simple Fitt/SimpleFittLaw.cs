@@ -52,14 +52,13 @@ public class SimpleFittLaw : MonoBehaviour
         SpawnSpheres();
         errors = 0;
         correctAnswers = 0;
-        totalRounds = 10;
+        totalRounds = 50;
         startTime = Time.time;
-        SpawnSpheres();
     }
 
     IEnumerator SetSphereMaterialDelayed(GameObject sphere, bool isCorrect)
     {
-        yield return new WaitForSeconds(0.1f); // Adjust the delay as needed
+        yield return new WaitForSeconds(0.5f); // Adjust the delay as needed
 
         Material material;
 
@@ -105,9 +104,14 @@ public class SimpleFittLaw : MonoBehaviour
         if (isCorrect)
         {
             correctAnswers++;
+            List<GameObject> objectsToDestroy = new List<GameObject>();
             foreach (Transform child in transform)
             {
-                Destroy(child.gameObject);
+                objectsToDestroy.Add(child.gameObject);
+            }
+            foreach (var obj in objectsToDestroy)
+            {
+                Destroy(obj);
             }
 
             if (correctAnswers + errors >= totalRounds)

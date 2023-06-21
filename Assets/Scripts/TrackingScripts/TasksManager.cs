@@ -4,13 +4,13 @@ using UnityEngine;
 
 public class TasksManager : MonoBehaviour
 {
-    TeleportPlayer teleportPlayer;
+    public TeleportPlayer teleportPlayer; 
     public SimpleFittLaw simpleFittLaw;
     public PhraseChecker phraseChecker;
     public TranscriptionChecker transcriptionChecker;
     public FittsLawCircleSubtraction MathTaskStress;
     public StroopRoomController stroopRoomTask;
-
+    public string taskName;
 
     public void StartTask(string taskName)
     {
@@ -20,6 +20,7 @@ public class TasksManager : MonoBehaviour
         transcriptionChecker.enabled = false;
         MathTaskStress.enabled = false;
         stroopRoomTask.enabled = false;
+            Debug.Log("Starting SwitchCase: " + taskName);
 
         // Enable the corresponding task script based on the taskName
         switch (taskName)
@@ -37,6 +38,7 @@ public class TasksManager : MonoBehaviour
                 teleportPlayer.TeleportToSpawnPoint(5); // Teleport to Transcription task spawn point
                 break;
             case "MathTaskStress":
+                Debug.Log("Inside MathStress Switch");
                 MathTaskStress.enabled = true;
                 teleportPlayer.TeleportToSpawnPoint(4); // Teleport to Math task spawn point
                 break;
@@ -52,5 +54,4 @@ public class TasksManager : MonoBehaviour
                 break;
         }
     }
-
 }

@@ -106,59 +106,63 @@ public class EyeTrackingRecorder : MonoBehaviour
 
     // Update is called once per frame
     void Update()
+{
+    // Get eye tracking data from OVREyeGaze for left and right eyes
+    leftEyeGazeDirection = leftEyeGaze.transform.forward;
+    leftEyeConfidence = leftEyeGaze.Confidence;
+    rightEyeGazeDirection = rightEyeGaze.transform.forward;
+    rightEyeConfidence = rightEyeGaze.Confidence;
+
+    // Buffer eye tracking data
+    BufferEyeTrackingData();
+
+    // Get headset and controller positions and rotations
+    headsetPosition = headsetTransform.position;
+    headsetRotation = headsetTransform.rotation;
+    leftControllerPosition = leftControllerTransform.position;
+    leftControllerRotation = leftControllerTransform.rotation;
+    rightControllerPosition = rightControllerTransform.position;
+    rightControllerRotation = rightControllerTransform.rotation;
+
+    // Buffer headset and controller data
+    BufferHeadsetAndControllerData();
+
+    // Calculate headset velocity and acceleration
+    Vector3 currentHeadsetPosition = headsetTransform.position;
+    headsetVelocity = (currentHeadsetPosition - previousHeadsetPosition) / Time.deltaTime;
+    headsetAcceleration = (headsetVelocity - previousHeadsetVelocity) / Time.deltaTime;
+
+    // Buffer headset velocity and acceleration data
+    BufferHeadsetVelocityAndAccelerationData();
+
+    // Update previous position and velocity values
+    previousHeadsetPosition = currentHeadsetPosition;
+    previousHeadsetVelocity = headsetVelocity;
+
+    frameCounter++;
+
+    if (frameCounter >= writeInterval)
     {
-        // Get eye tracking data from OVREyeGaze for left and right eyes
-        leftEyeGazeDirection = leftEyeGaze.transform.forward;
-        leftEyeConfidence = leftEyeGaze.Confidence;
-        rightEyeGazeDirection = rightEyeGaze.transform.forward;
-        rightEyeConfidence = rightEyeGaze.Confidence;
+        // Create new lists that are copies of the original lists and pass those to WriteDataToFileAsync
+        var eyeTrackingDataToWrite = new List<string>(eyeTrackingDataBuffer);
+        WriteDataToFileAsync(eyeTrackingDataFilePath, eyeTrackingDataToWrite);
 
-        // Buffer eye tracking data
-        BufferEyeTrackingData();
+        var headsetAndControllerDataToWrite = new List<string>(headsetAndControllerDataBuffer);
+        WriteDataToFileAsync(headsetAndControllerDataFilePath, headsetAndControllerDataToWrite);
 
-        // Get headset and controller positions and rotations
-        headsetPosition = headsetTransform.position;
-        headsetRotation = headsetTransform.rotation;
-        leftControllerPosition = leftControllerTransform.position;
-        leftControllerRotation = leftControllerTransform.rotation;
-        rightControllerPosition = rightControllerTransform.position;
-        rightControllerRotation = rightControllerTransform.rotation;
+        var headsetVelocityAndAccelerationDataToWrite = new List<string>(headsetVelocityAndAccelerationDataBuffer);
+        WriteDataToFileAsync(headsetVelocityAndAccelerationDataFilePath, headsetVelocityAndAccelerationDataToWrite);
 
-        // Buffer headset and controller data
-        BufferHeadsetAndControllerData();
+        // Clear the buffers
+        eyeTrackingDataBuffer.Clear();
+        headsetAndControllerDataBuffer.Clear();
+        headsetVelocityAndAccelerationDataBuffer.Clear();
 
-        // Calculate headset velocity and acceleration
-        Vector3 currentHeadsetPosition = headsetTransform.position;
-        headsetVelocity = (currentHeadsetPosition - previousHeadsetPosition) / Time.deltaTime;
-        headsetAcceleration = (headsetVelocity - previousHeadsetVelocity) / Time.deltaTime;
-
-        // Buffer headset velocity and acceleration data
-        BufferHeadsetVelocityAndAccelerationData();
-
-        // Update previous position and velocity values
-        previousHeadsetPosition = currentHeadsetPosition;
-        previousHeadsetVelocity = headsetVelocity;
-
-        frameCounter++;
-
-        if (frameCounter >= writeInterval)
-        {
-            // Write buffered data to the files
-            WriteDataToFileAsync(eyeTrackingDataFilePath, eyeTrackingDataBuffer);
-            WriteDataToFileAsync(headsetAndControllerDataFilePath, headsetAndControllerDataBuffer);
-            WriteDataToFileAsync(headsetVelocityAndAccelerationDataFilePath, headsetVelocityAndAccelerationDataBuffer);
-
-            // Clear the buffers
-            eyeTrackingDataBuffer.Clear();
-            headsetAndControllerDataBuffer.Clear();
-            headsetVelocityAndAccelerationDataBuffer.Clear();
-
-            // Reset the frame counter
-            frameCounter = 0;
-        }
-
-
+        // Reset the frame counter
+        frameCounter = 0;
     }
+}
+
 
     // Function to buffer eye tracking data
     void BufferEyeTrackingData()
