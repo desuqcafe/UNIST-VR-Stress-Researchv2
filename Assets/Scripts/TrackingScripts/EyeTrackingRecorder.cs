@@ -60,13 +60,16 @@ public class EyeTrackingRecorder : MonoBehaviour
         headsetAndControllerDataFilePath = Path.Combine(folderPath, "headsetAndControllerData_" + timeStamp + ".csv");
         headsetVelocityAndAccelerationDataFilePath = Path.Combine(folderPath, "headsetVelocityAndAccelerationData_" + timeStamp + ".csv");
 
-        if (File.Exists(eyeTrackingDataFilePath))
+
+        string directoryPath = Path.GetDirectoryName(eyeTrackingDataFilePath);
+
+        if (Directory.Exists(directoryPath))
         {
             filePathText.text = "Eye tracking data file path: " + eyeTrackingDataFilePath;
         }
         else
         {
-            filePathText.text = "File does not exist: " + eyeTrackingDataFilePath;
+            filePathText.text = "Directory does not exist: " + directoryPath;
         }
     }
 
