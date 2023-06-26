@@ -84,6 +84,10 @@ public class EyeTrackingRecorder : MonoBehaviour
     private Vector3 rightEyeGazeDirection;
     private float leftEyeConfidence;
     private float rightEyeConfidence;
+    private Vector3 leftEyePosition;
+    private Vector3 rightEyePosition;
+    private Quaternion leftEyeRotation;
+    private Quaternion rightEyeRotation;
 
     // Reference to headset and controllers
     public Transform headsetTransform;
@@ -126,6 +130,10 @@ public class EyeTrackingRecorder : MonoBehaviour
     leftEyeConfidence = leftEyeGaze.Confidence;
     rightEyeGazeDirection = rightEyeGaze.transform.forward;
     rightEyeConfidence = rightEyeGaze.Confidence;
+    leftEyePosition = leftEyeGaze.transform.position;
+    rightEyePosition = rightEyeGaze.transform.position;
+    leftEyeRotation = leftEyeGaze.transform.rotation;
+    rightEyeRotation = rightEyeGaze.transform.rotation;
 
     // Buffer eye tracking data
     BufferEyeTrackingData();
@@ -181,7 +189,7 @@ public class EyeTrackingRecorder : MonoBehaviour
     // Function to buffer eye tracking data
     void BufferEyeTrackingData()
     {
-        string eyeTrackingData = $"{Time.time}, {currentTask}, {leftEyeGazeDirection}, {rightEyeGazeDirection}, {leftEyeConfidence}, {rightEyeConfidence}";
+        string eyeTrackingData = $"{Time.time}, {currentTask}, {leftEyeGazeDirection}, {rightEyeGazeDirection}, {leftEyeConfidence}, {rightEyeConfidence}, {leftEyePosition}, {rightEyePosition}, {leftEyeRotation}, {rightEyeRotation}";
         eyeTrackingDataBuffer.Add(eyeTrackingData);
     }
 
