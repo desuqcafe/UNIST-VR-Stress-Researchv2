@@ -5,8 +5,19 @@ using System.Collections.Generic;
 using System.Collections;
 using System.IO;
 
-public class PhraseChecker : MonoBehaviour
+public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
 {
+
+    private Keyboard keyboard;
+
+    public void OnEnterPressed()
+    {
+        SubmitInput();
+    }
+    public void OnDeletePressed()
+    {
+        backspaceCount++;
+    }
 
     private string folderPath;
     private string timeStamp;
@@ -20,6 +31,10 @@ public class PhraseChecker : MonoBehaviour
         timeStamp = System.DateTime.Now.ToString("HH-mm-ss");
 
         phraseCheckerFilePath = Path.Combine(folderPath, "transcriptionCheckData_" + timeStamp + ".csv");
+
+        GameObject keyboardObject = GameObject.Find("KeyboardPhrase");
+        keyboard = keyboardObject.GetComponent<Keyboard>();
+        keyboard.SetInputHandler(this);
     }
 
     public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
@@ -51,9 +66,8 @@ public class PhraseChecker : MonoBehaviour
     private int errors;
     private int correctAnswers;
 
-    public void Start()
+    void OnEnable()
     {
-
         eyeTrackingRecorder.currentTask = "PhraseCheck";
 
         currentPhraseIndex = 0;
@@ -61,7 +75,7 @@ public class PhraseChecker : MonoBehaviour
         correctAnswers = 0;
         trialNumber = 0;
         UpdateDisplayText();
-        InvokeRepeating(nameof(CheckInput), 1f, 1f);
+        //InvokeRepeating(nameof(CheckInput), 1f, 1f);
         startTime = Time.time;
     }
 
@@ -70,14 +84,20 @@ public class PhraseChecker : MonoBehaviour
         if (inputField.text == phrases[currentPhraseIndex])
         {
             correctAnswers++;
-            NextPhrase();
         }
         else if (inputField.text.Length == phrases[currentPhraseIndex].Length)
         {
             errors++;
-            NextPhrase();
         }
+
+        NextPhrase();
     }
+
+    public void SubmitInput()
+    {
+        CheckInput();
+    }
+
 
     public void NextPhrase()
     {
@@ -127,7 +147,11 @@ public class PhraseChecker : MonoBehaviour
 
         string data = $"{trialNumber}, {timePerPhrase}, {backspaceCount}, {typingSpeed}, {taskTime}, {errorRate}, {accuracy}";
         phraseCheckerDataBuffer.Add(data);
+
+        trialNumber++; // Increment trial number
+        backspaceCount = 0; // Reset the backspace count after recording the data
     }
+
 
     private void WriteBufferedDataToFile()
     {
@@ -137,7 +161,16 @@ public class PhraseChecker : MonoBehaviour
 
             // Clear the buffer
             phraseCheckerDataBuffer.Clear();
+
+            // Reset the backspace count
+            ResetBackspaceCount();
         }
+    }
+
+
+    public void ResetBackspaceCount()
+    {
+        backspaceCount = 0;
     }
 
 

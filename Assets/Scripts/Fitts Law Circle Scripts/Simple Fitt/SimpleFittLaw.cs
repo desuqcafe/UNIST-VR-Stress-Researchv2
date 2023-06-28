@@ -45,15 +45,27 @@ public class SimpleFittLaw : MonoBehaviour
     private List<float> accuracies = new List<float>();
 
 
-    void Start()
+    void OnEnable()
     {
         eyeTrackingRecorder.currentTask = "FittTaskBase";
 
-        SpawnSpheres();
+        // Initialize your variables here.
         errors = 0;
         correctAnswers = 0;
-        totalRounds = 50;
-        startTime = Time.time;
+        totalRounds = 1000; // You may want to set this as a constant or as a public variable for flexibility.
+        startTime = 0f;
+        taskTime = 0f;
+        simpleFittDataBuffer.Clear();
+        roundTimes.Clear();
+        incorrectClicksPerRound.Clear();
+        correctSphereGazeDurations.Clear();
+        incorrectSphereGazeDurations.Clear();
+        errorRates.Clear();
+        accuracies.Clear();
+
+        // Call your methods to setup the task
+        SpawnSpheres();
+        StartNewRound();
     }
 
     IEnumerator SetSphereMaterialDelayed(GameObject sphere, bool isCorrect)

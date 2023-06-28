@@ -262,6 +262,10 @@ MonoBehaviour:
   valueText: {fileID: 0}
   valueCanvas: {fileID: 0}
   correctSphere: 0
+  originalMaterial: {fileID: 2100000, guid: 58cde36ad3bc1dc4b9266de7126d9100, type: 2}
+  correctAnswerMaterial: {fileID: 2100000, guid: b60c11772a5a41642aba60d2d2a24f0f,
+    type: 2}
+  wrongAnswerMaterial: {fileID: 2100000, guid: 8494b7742a1a3df4c8bb95102c406cfe, type: 2}
 --- !u!114 &-5538033638889673392
 MonoBehaviour:
   m_ObjectHideFlags: 0

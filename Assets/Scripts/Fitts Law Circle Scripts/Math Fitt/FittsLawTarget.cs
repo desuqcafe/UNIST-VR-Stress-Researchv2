@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 
 public class FittsLawTarget : MonoBehaviour
 {
@@ -9,6 +10,9 @@ public class FittsLawTarget : MonoBehaviour
     public bool correctSphere = false;
     private FittsLawCircleSubtraction fittsLawCircleSubtraction; // reference to FittsLawCircleSubtraction
     private bool isBeingClicked = false;
+    public Material originalMaterial;
+    public Material correctAnswerMaterial;
+    public Material wrongAnswerMaterial;
 
 
 
@@ -41,14 +45,40 @@ public class FittsLawTarget : MonoBehaviour
         if (correctSphere)
         {
             fittsLawCircleSubtraction.score++;
-            fittsLawCircleSubtraction.ContinueGame(this.gameObject);
+            StartCoroutine(ShowFeedbackAndContinue(correctAnswerMaterial, this.gameObject));
         }
         else
         {
             Debug.Log("Incorrect Choice");
-            fittsLawCircleSubtraction.StartNewRound();
+            StartCoroutine(ShowFeedbackAndContinue(wrongAnswerMaterial, null));
         }
 
         isBeingClicked = false;
+    }
+
+    IEnumerator ShowFeedbackAndContinue(Material feedbackMaterial, GameObject correctSphere)
+    {
+        ChangeAllSpheresMaterial(feedbackMaterial);
+
+        yield return new WaitForSeconds(0.5f);
+
+        ChangeAllSpheresMaterial(originalMaterial);
+
+        if (correctSphere != null)
+        {
+            fittsLawCircleSubtraction.ContinueGame(correctSphere);
+        }
+        else
+        {
+            fittsLawCircleSubtraction.StartNewRound();
+        }
+    }
+
+    void ChangeAllSpheresMaterial(Material material)
+    {
+        foreach (GameObject sphere in fittsLawCircleSubtraction.spheresList)
+        {
+            sphere.GetComponent<Renderer>().material = material;
+        }
     }
 }

@@ -46,11 +46,25 @@ public class StroopRoomController : MonoBehaviour
     private float responseTime;
 
 
-    void Start()
+    void OnEnable()
     {
         eyeTrackingRecorder.currentTask = "StroopRoom";
 
+        // Initialize your variables here.
+        trialNumber = 0;
+        matchedColorIndex = 0;
+        textColorIndex = 0;
+        errors = 0;
+        correctAnswers = 0;
+        startTime = 0f;
+        taskTime = 0f;
+        trialStartTime = 0f;
+        responseTime = 0f;
+        stroopRoomDataBuffer.Clear();
+
+        // Call your methods to setup the task
         RandomizeColors();
+        StartNewRound();
     }
 
     void RandomizeColors()

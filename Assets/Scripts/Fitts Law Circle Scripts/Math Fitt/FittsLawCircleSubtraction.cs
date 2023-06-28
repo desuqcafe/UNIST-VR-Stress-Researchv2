@@ -28,7 +28,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     public TMP_Text sphereTextPrefab;
 
     List<TMP_Text> sphereTexts = new List<TMP_Text>();
-    private List<GameObject> spheresList = new List<GameObject>(); // list to store all spawned spheres
+    public List<GameObject> spheresList = new List<GameObject>(); // list to store all spawned spheres
 
     private int sphereCount = 0;
     private int correctAnswer = 1022;
@@ -69,12 +69,40 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         }
     }
 
-    void Start()
+    void OnEnable()
     {
         eyeTrackingRecorder.currentTask = "MathTaskStress";
 
         startTime = Time.time;
         SpawnSpheres();
+    }
+
+    void OnDisable()
+    {
+        // Cleanup actions, such as saving the game data and resetting necessary variables
+        EndGame();
+
+        // Reset state variables
+        ResetState();
+    }
+
+    private void ResetState()
+    {
+        score = 0;
+        roundCount = 0;
+        errors = 0;
+        correctAnswers = 0;
+        correctAnswer = 1022;
+
+        // Clear all the lists
+        sphereTexts.Clear();
+        spheresList.Clear();
+        roundTimes.Clear();
+        incorrectClicksPerRound.Clear();
+        correctSphereGazeDurations.Clear();
+        incorrectSphereGazeDurations.Clear();
+        errorRates.Clear();
+        accuracies.Clear();
     }
 
     void SetSphereText(GameObject sphere, string text)

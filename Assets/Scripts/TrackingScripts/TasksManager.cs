@@ -12,6 +12,10 @@ public class TasksManager : MonoBehaviour
     public StroopRoomController stroopRoomTask;
     public string taskName;
 
+    public InterviewQuestions interviewTask; 
+    public Canvas interviewCanvas;
+
+
     public void StartTask(string taskName)
     {
         // Disable all the task scripts
@@ -20,7 +24,9 @@ public class TasksManager : MonoBehaviour
         transcriptionChecker.enabled = false;
         MathTaskStress.enabled = false;
         stroopRoomTask.enabled = false;
-            Debug.Log("Starting SwitchCase: " + taskName);
+        interviewTask.enabled = false;
+        interviewCanvas.enabled = false;
+        Debug.Log("Starting SwitchCase: " + taskName);
 
         // Enable the corresponding task script based on the taskName
         switch (taskName)
@@ -47,6 +53,8 @@ public class TasksManager : MonoBehaviour
                 teleportPlayer.TeleportToSpawnPoint(3); // Teleport to Stroop task spawn point
                 break;
             case "InterviewTask":
+                interviewCanvas.enabled = true; // Enable the Interview Canvas
+                interviewTask.enabled = true; // Enable the InterviewQuestions script
                 teleportPlayer.TeleportToSpawnPoint(0); // Teleport to Interview task spawn point
                 break;
             default:

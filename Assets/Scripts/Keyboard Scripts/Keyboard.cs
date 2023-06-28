@@ -6,10 +6,6 @@ using UnityEngine.XR.Interaction.Toolkit;
 
 public class Keyboard : MonoBehaviour
 {
-
-    public PhraseChecker phraseChecker;
-
-
     public TMP_InputField inputField;
     public TMP_Text promptText;
     private int currentPromptIndex = 0;
@@ -38,11 +34,11 @@ public class Keyboard : MonoBehaviour
     {
         inputField.onValueChanged.AddListener(CompareInput);
         caps = true;
-        currentPromptIndex = 0;
+        // currentPromptIndex = 0;
         // Access the phrases list from the PhraseChecker script
-        phrases = phraseChecker.phrases;
+        // phrases = phraseChecker.phrases;
 
-        promptText.text = phrases[currentPromptIndex];
+        // promptText.text = phrases[currentPromptIndex];
 
         // Make the caret always visible
         inputField.caretBlinkRate = 0;
@@ -102,29 +98,39 @@ public class Keyboard : MonoBehaviour
 
     }
 
+    private IKeyboardInputHandler inputHandler;
+
+    public void SetInputHandler(IKeyboardInputHandler handler)
+    {
+        inputHandler = handler;
+    }
+
     public void InsertEnter()
     {
-        //inputField.text += "\n";
-        phraseChecker.CheckInput();
-            UpdateCaretPosition();
-
-
+        if (inputHandler != null)
+        {
+            inputHandler.OnEnterPressed();
+        }
+        UpdateCaretPosition();
     }
+
 
     public void InsertDelete()
     {
-        phraseChecker.backspaceCount++; // Add this line
+        if (inputHandler != null)
+        {
+            inputHandler.OnDeletePressed();
+        }
 
         DelChar();
         UpdateCaretPosition();
-
     }
 
 
     public void InsertSpace()
     {
         inputField.text += " ";
-            UpdateCaretPosition();
+        UpdateCaretPosition();
 
     }
 
@@ -182,43 +188,4 @@ public class Keyboard : MonoBehaviour
         rightHandRay.enabled = true;
     }
 
-    // public void GenerateNewPrompt()
-    // {
-    //     if (promptCount == 1) {
-    //         TaskManager.Instance.KeyboardDisable();
-    //         TaskManager.Instance.FittEnable();
-    //         enableRays();
-    //     } else if (promptFinished) {
-    //         currentPromptIndex++;
-    //         if (currentPromptIndex >= promptList.Length)
-    //         {
-    //             currentPromptIndex = 0;
-    //         }
-    //         promptText.text = promptList[currentPromptIndex];
-    //         inputField.text = "";
-    //         promptFinished = false;
-    //         promptCount++;
-    //     }
-    // }
-
-    public void GenerateNewPrompt()
-    {
-        if (promptCount == 1) {
-             TaskManager.Instance.KeyboardDisable();
-             TaskManager.Instance.FittEnable();
-             enableRays();
-        }
-        else if (phraseChecker.inputField.textComponent.color == Color.green) // Replaced promptFinished with color check
-        {
-            currentPromptIndex++;
-            if (currentPromptIndex >= phrases.Count)
-            {
-                currentPromptIndex = 0;
-            }
-            promptText.text = phrases[currentPromptIndex];
-            inputField.text = "";
-            // promptFinished = false; // Commented out
-            promptCount++;
-        }
-    }
 }
