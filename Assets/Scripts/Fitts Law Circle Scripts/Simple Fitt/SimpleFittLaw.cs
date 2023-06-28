@@ -44,6 +44,9 @@ public class SimpleFittLaw : MonoBehaviour
     private List<float> errorRates = new List<float>();
     private List<float> accuracies = new List<float>();
 
+    private int lastCorrectSphereIndex = -3;  // Initialize this to -3 so the first time it does not affect the choice
+
+
 
     void OnEnable()
     {
@@ -88,8 +91,21 @@ public class SimpleFittLaw : MonoBehaviour
 
     void SpawnSpheres()
     {
+
         float radius = 0.5f;
-        int correctSphereIndex = Random.Range(0, sphereCount);
+
+        // Exclude the adjacent spheres of the last correct sphere
+        List<int> possibleIndices = new List<int>();
+        for (int i = 0; i < sphereCount; i++)
+        {
+            if (i < lastCorrectSphereIndex - 1 || i > lastCorrectSphereIndex + 1)
+            {
+                possibleIndices.Add(i);
+            }
+        }
+
+        int correctSphereIndex = possibleIndices[Random.Range(0, possibleIndices.Count)];
+        lastCorrectSphereIndex = correctSphereIndex;
 
         for (int i = 0; i < sphereCount; i++)
         {
@@ -107,6 +123,34 @@ public class SimpleFittLaw : MonoBehaviour
             clickHandler.sphereSelector = this.gameObject;
             clickHandler.isCorrect = isCorrect;
         }
+
+
+
+        // previous logic
+
+
+        
+        // float radius = 0.5f;
+        // int correctSphereIndex = Random.Range(0, sphereCount);
+
+        // for (int i = 0; i < sphereCount; i++)
+        // {
+        //     bool isCorrect = (i == correctSphereIndex);
+        //     GameObject sphere = Instantiate(spherePrefab, transform);
+
+        //     StartCoroutine(SetSphereMaterialDelayed(sphere, isCorrect));
+
+        //     float angle = (float)(i + 1) / sphereCount * Mathf.PI * 2f;
+        //     float x = Mathf.Sin(angle) * radius;
+        //     float y = Mathf.Cos(angle) * radius;
+        //     sphere.transform.localPosition = new Vector3(x, y, 0f);
+
+        //     SimpleSphereHandler clickHandler = sphere.GetComponent<SimpleSphereHandler>();
+        //     clickHandler.sphereSelector = this.gameObject;
+        //     clickHandler.isCorrect = isCorrect;
+        // }
+
+
     }
 
     public void SphereClicked(bool isCorrect)
