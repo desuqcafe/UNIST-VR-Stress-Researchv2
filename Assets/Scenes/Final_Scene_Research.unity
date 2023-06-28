@@ -975,8 +975,8 @@ MonoBehaviour:
   MathTaskStress: {fileID: 960214957}
   stroopRoomTask: {fileID: 985258447}
   taskName: 
-  interviewTask: {fileID: 0}
-  interviewCanvas: {fileID: 0}
+  interviewTask: {fileID: 6256288719088374974}
+  interviewCanvas: {fileID: 6256288719088374981}
 --- !u!1 &75471843
 GameObject:
   m_ObjectHideFlags: 0
@@ -5167,8 +5167,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 174.8, y: 37.8}
-  m_SizeDelta: {x: 103.52, y: 100}
+  m_AnchoredPosition: {x: 155.4, y: 37.8}
+  m_SizeDelta: {x: 192.87, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &427092706
 MonoBehaviour:
@@ -14580,7 +14580,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 41
+  m_text: 'Time Remaining: 42'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -14674,8 +14674,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0.67, y: 0.47}
-  m_SizeDelta: {x: 348.71, y: 89.59}
+  m_AnchoredPosition: {x: -0.0000038146973, y: 0.47}
+  m_SizeDelta: {x: 192.87, y: 89.59}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1316952979
 GameObject:
@@ -21604,6 +21604,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6940859400442458799, guid: bb1a18667128b7c49b1fa6ad25f83866,
         type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6940859400442458799, guid: bb1a18667128b7c49b1fa6ad25f83866,
+        type: 3}
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
@@ -23915,7 +23920,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6256288719088374970}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 39183f60da3fbbd4ba1384b56bc99cda, type: 3}
   m_Name: 
@@ -23923,3 +23928,9 @@ MonoBehaviour:
   questionText: {fileID: 6256288719088374971}
   timerText: {fileID: 1281491515}
   endQuestionAudio: {fileID: 8300000, guid: 870b2383d881b1a49a44f0c0e7dd5798, type: 3}
+--- !u!223 &6256288719088374981 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 3527961456816149578, guid: 4e8a9fe1fde2d2548b8f1a97d22e23c9,
+    type: 3}
+  m_PrefabInstance: {fileID: 6256288719088374969}
+  m_PrefabAsset: {fileID: 0}
