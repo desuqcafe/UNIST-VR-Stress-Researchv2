@@ -193,7 +193,6 @@ public class OVRFaceExpressions : MonoBehaviour, IReadOnlyCollection<float>
             weight = 0;
             return false;
         }
-
         weight = _currentFaceState.ExpressionWeights[(int)expression];
         return true;
     }

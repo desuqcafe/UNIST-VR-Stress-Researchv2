@@ -1,0 +1,41 @@
+ManifestFileVersion: 0
+CRC: 3188545930
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1cd4de9bedc2d1c6efa4b0415bab316b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: b30fce1a9ad74efb72be6c308c56e365
+HashAppended: 0
+ClassTypes:
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Materials/Green.mat
+- Assets/Models/Materials/rp_eric_rigged_001_dif.mat
+- Assets/Materials/Gray.mat
+- Assets/Materials/Purple.mat
+- Assets/Oculus/Interaction/Runtime/Materials/OculusHandPinchMaterial.mat
+- Assets/Materials/Yellow.mat
+- Assets/Materials/Beige.mat
+- Assets/Materials/Orange.mat
+- Assets/Materials/Black.mat
+- Assets/Oculus/Interaction/Runtime/Materials/OculusHandCursor.mat
+- Assets/Oculus/Interaction/Runtime/Materials/OculusHand.mat
+- Assets/Oculus/Interaction/Runtime/Materials/OculusControllerRayCursor.mat
+- Assets/Materials/Blue.mat
+- Assets/Oculus/Interaction/Runtime/Materials/OculusControllerRayMaterial.mat
+- Packages/com.unity.render-pipelines.universal/Runtime/Materials/Lit.mat
+- Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Materials/prototype_512x512_grey2.mat
+- Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Materials/URP/Prototype_512x512_Yellow.mat
+- Assets/Materials/Red.mat
+Dependencies:
+- C:/Users/trinh/Downloads/v5/UNIST-VR-Stress-Researchv2/OVRAssetBundles/OVRMasterBundle/asset_jpg0
+- C:/Users/trinh/Downloads/v5/UNIST-VR-Stress-Researchv2/OVRAssetBundles/OVRMasterBundle/asset_png0
+- C:/Users/trinh/Downloads/v5/UNIST-VR-Stress-Researchv2/OVRAssetBundles/OVRMasterBundle/asset_shader0

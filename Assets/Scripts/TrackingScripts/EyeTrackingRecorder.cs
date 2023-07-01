@@ -27,12 +27,14 @@ public class EyeTrackingRecorder : MonoBehaviour
 
     private string folderPath;
     private string timeStamp;
+    private string faceExpressionDataFilePath;
     private string eyeTrackingDataFilePath;
     private string headsetAndControllerDataFilePath;
     private string headsetVelocityAndAccelerationDataFilePath;
     public string currentTask { get; set; }
 
     // Buffer to store data before writing to files
+    private List<string> faceExpressionDataBuffer = new List<string>();
     private List<string> eyeTrackingDataBuffer = new List<string>();
     private List<string> headsetAndControllerDataBuffer = new List<string>();
     private List<string> headsetVelocityAndAccelerationDataBuffer = new List<string>();
@@ -56,6 +58,7 @@ public class EyeTrackingRecorder : MonoBehaviour
         folderPath = Application.persistentDataPath;
         timeStamp = System.DateTime.Now.ToString("HH-mm-ss");
 
+        faceExpressionDataFilePath = Path.Combine(folderPath, "faceExpressionData_" + timeStamp + ".csv");
         eyeTrackingDataFilePath = Path.Combine(folderPath, "eyeTrackingData_" + timeStamp + ".csv");
         headsetAndControllerDataFilePath = Path.Combine(folderPath, "headsetAndControllerData_" + timeStamp + ".csv");
         headsetVelocityAndAccelerationDataFilePath = Path.Combine(folderPath, "headsetVelocityAndAccelerationData_" + timeStamp + ".csv");
@@ -73,7 +76,18 @@ public class EyeTrackingRecorder : MonoBehaviour
         }
     }
 
+    // Reference to OVRFaceExpressions script
+    [SerializeField]
+    private OVRFaceExpressions faceExpressions;
+    private class FaceWeightComponent
+    {
+        public string Name;
+        public float Weight;
+        public OVRFaceExpressions.FaceExpression FaceExpression { get; set; }
 
+        public override string ToString() => $"{FaceExpression}: {Name}: {Weight}";
+    }
+    private List<FaceWeightComponent> components = new List<FaceWeightComponent>();
 
     // Reference to the OVREyeGaze script for left and right eyes
     public OVREyeGaze leftEyeGaze;
@@ -111,6 +125,7 @@ public class EyeTrackingRecorder : MonoBehaviour
     void Start()
     {
         // Initialize variables
+        InitFaceExpression();
         leftEyeGazeDirection = Vector3.zero;
         rightEyeGazeDirection = Vector3.zero;
         leftEyeConfidence = 0;
@@ -121,10 +136,35 @@ public class EyeTrackingRecorder : MonoBehaviour
         previousHeadsetVelocity = Vector3.zero;
         headsetAcceleration = Vector3.zero;
     }
-
+    private void InitFaceExpression() 
+    {
+        foreach (OVRFaceExpressions.FaceExpression e in Enum.GetValues(typeof(OVRFaceExpressions.FaceExpression)))
+        {
+            //Create a component for each face expression features
+            FaceWeightComponent faceWeightComponent = new FaceWeightComponent();
+            faceWeightComponent.FaceExpression = e;
+            faceWeightComponent.Name = e.ToString();
+            components.Add(faceWeightComponent);
+        }
+    }
     // Update is called once per frame
     void Update()
 {
+    // Get face expression data from OVRFaceExpressions.cs
+    foreach (FaceWeightComponent comp in components)
+    {
+        float weight;
+        // filePathText.text += "- Num " + frameCounter + ":" + "\n" ;
+        // filePathText.text += comp.FaceExpression + "\n";
+        if (faceExpressions.TryGetFaceExpressionWeight(comp.FaceExpression, out weight))
+        {
+            // filePathText.text += weight;
+            comp.Weight = weight;
+        }
+    }
+    // Buffer face expression data
+    BufferFaceExpressionData();
+
     // Get eye tracking data from OVREyeGaze for left and right eyes
     leftEyeGazeDirection = leftEyeGaze.transform.forward;
     leftEyeConfidence = leftEyeGaze.Confidence;
@@ -166,6 +206,9 @@ public class EyeTrackingRecorder : MonoBehaviour
     if (frameCounter >= writeInterval)
     {
         // Create new lists that are copies of the original lists and pass those to WriteDataToFileAsync
+        var faceExpressionDataToWrite = new List<string>(faceExpressionDataBuffer);
+        WriteDataToFileAsync(faceExpressionDataFilePath, faceExpressionDataToWrite);
+
         var eyeTrackingDataToWrite = new List<string>(eyeTrackingDataBuffer);
         WriteDataToFileAsync(eyeTrackingDataFilePath, eyeTrackingDataToWrite);
 
@@ -184,7 +227,16 @@ public class EyeTrackingRecorder : MonoBehaviour
         frameCounter = 0;
     }
 }
-
+    // Function to buffer face expression data
+    void BufferFaceExpressionData()
+    {
+        string faceExpressionData = $"{Time.time}, {currentTask}";
+        foreach (FaceWeightComponent comp in components)
+        {
+            faceExpressionData += $", {comp.Weight}";
+        }
+        faceExpressionDataBuffer.Add(faceExpressionData);
+    }
 
     // Function to buffer eye tracking data
     void BufferEyeTrackingData()

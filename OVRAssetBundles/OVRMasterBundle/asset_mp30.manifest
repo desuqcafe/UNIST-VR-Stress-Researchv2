@@ -1,0 +1,17 @@
+ManifestFileVersion: 0
+CRC: 2714646555
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 7f76bbafe28f865ad806483ca3b0df25
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Button/Audio/ButtonPress.mp3
+Dependencies: []

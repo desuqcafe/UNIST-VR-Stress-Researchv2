@@ -1,0 +1,22 @@
+ManifestFileVersion: 0
+CRC: 261754396
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 4032161ba0c3af333df734f8d0eda4e7
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 0df1dec30b5d061d422d3e6493d27647
+HashAppended: 0
+ClassTypes:
+- Class: 48
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/MRTK-Keyboard-main/MRTK/StandardAssets/Shaders/MixedRealityTextMeshPro.shader
+- Assets/TextMesh Pro/Shaders/TMP_SDF-Mobile.shader
+- Assets/Oculus/Interaction/Runtime/Shaders/OculusControllerRayShader.shader
+- Assets/Oculus/Interaction/Runtime/Shaders/OculusHandCursor.shader
+- Packages/com.unity.render-pipelines.universal/Shaders/Lit.shader
+- Assets/Oculus/Interaction/Runtime/Shaders/OculusHand.shader
+Dependencies: []

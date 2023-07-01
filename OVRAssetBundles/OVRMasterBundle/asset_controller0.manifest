@@ -1,0 +1,24 @@
+ManifestFileVersion: 0
+CRC: 304787667
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: c7d71c76de384785677be386dd4e1a9f
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: e8df1f9f82371e82de919a94edcc7dd6
+HashAppended: 0
+ClassTypes:
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Models/Eric_AnimatorController.controller
+- Assets/Oculus/Interaction/Runtime/Animations/Hands/HandController_r_.controller
+- Assets/Models/Carla_AnimatorController.controller
+- Assets/Oculus/Interaction/Runtime/Animations/Hands/HandController_l_.controller
+Dependencies:
+- C:/Users/trinh/Downloads/v5/UNIST-VR-Stress-Researchv2/OVRAssetBundles/OVRMasterBundle/asset_anim0
+- C:/Users/trinh/Downloads/v5/UNIST-VR-Stress-Researchv2/OVRAssetBundles/OVRMasterBundle/asset_fbx0

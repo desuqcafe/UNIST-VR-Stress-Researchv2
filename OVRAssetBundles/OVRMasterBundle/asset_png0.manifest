@@ -1,0 +1,31 @@
+ManifestFileVersion: 0
+CRC: 4269520086
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 1ebfc3e53dd8fab6e97cf5b4a9586fd9
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 2d8df09e698f722ada1caa03d3413830
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/MRTK-Keyboard-main/MRTK/SDK/Experimental/NonNativeKeyboard/Icons/KeyboardKeyGlyphs_Right.png
+- Assets/MRTK-Keyboard-main/MRTK/SDK/Experimental/NonNativeKeyboard/Icons/KeyboardKeyGlyphs_Up.png
+- Assets/MRTK-Keyboard-main/MRTK/SDK/Experimental/NonNativeKeyboard/Icons/KeyboardKeyGlyphs_Dictation.png
+- Assets/MRTK-Keyboard-main/MRTK/SDK/Experimental/NonNativeKeyboard/Icons/KeyboardKeyGlyphs_UnShift_Symbols.png
+- Assets/MRTK-Keyboard-main/MRTK/SDK/Experimental/NonNativeKeyboard/Icons/KeyboardKeyGlyphs_Shift_Symbols.png
+- Assets/MRTK-Keyboard-main/MRTK/SDK/Experimental/NonNativeKeyboard/Icons/KeyboardKeyGlyphs_Left.png
+- Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Textures/prototype_512x512_yellow.png
+- Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Textures/prototype_512x512_normal.png
+- Assets/Oculus/Interaction/Runtime/Textures/fingers_glow_mask.png
+- Assets/Oculus/Interaction/Runtime/Textures/Reticle-Dot.png
+- Assets/MRTK-Keyboard-main/MRTK/SDK/Experimental/NonNativeKeyboard/Icons/KeyboardKeyGlyphs_Close.png
+- Assets/Thirdparty/Ciathyza/Gridbox Prototype Materials/Textures/prototype_512x512_grey2.png
+- Assets/MRTK-Keyboard-main/MRTK/SDK/Experimental/NonNativeKeyboard/Icons/KeyboardKeyGlyphs_Backspace.png
+Dependencies: []
