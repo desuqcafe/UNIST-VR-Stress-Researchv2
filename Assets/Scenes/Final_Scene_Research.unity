@@ -9551,6 +9551,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 897502540026174764, guid: b887a69b204caf54e92e8e2323d41c0b,
         type: 3}
+      propertyPath: wrongAnswerAudio
+      value: 
+      objectReference: {fileID: 8300000, guid: 870b2383d881b1a49a44f0c0e7dd5798, type: 3}
+    - target: {fileID: 897502540026174764, guid: b887a69b204caf54e92e8e2323d41c0b,
+        type: 3}
       propertyPath: spawnCenterObject
       value: 
       objectReference: {fileID: 295425742}
@@ -9636,7 +9641,11 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 1771042396}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 2213905336101949030, guid: b887a69b204caf54e92e8e2323d41c0b,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1494398620}
   m_SourcePrefab: {fileID: 100100000, guid: b887a69b204caf54e92e8e2323d41c0b, type: 3}
 --- !u!114 &960214957 stripped
 MonoBehaviour:
@@ -10155,13 +10164,14 @@ MonoBehaviour:
   displayText: {fileID: 972337027}
   inputFieldBackground: {fileID: 972337029}
   backspaceCount: 0
-  phrases:
+  newNewphrases:
   - The boat floats on the water
   - The cat chased the mouse
   - The sun rises in the east
   - The leaves fall from the trees in autumn
   - The stars shine brightly at night
   - The train travels along the tracks
+  phraseIndices: 
 --- !u!1001 &985258446
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -10530,7 +10540,7 @@ PrefabInstance:
     - target: {fileID: 4108477757707696144, guid: 3d3461141117e4a48b7349d1393aec2f,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.008
+      value: 0.409
       objectReference: {fileID: 0}
     - target: {fileID: 4108477757707696144, guid: 3d3461141117e4a48b7349d1393aec2f,
         type: 3}
@@ -11821,6 +11831,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ControllerRayInteractor
+      objectReference: {fileID: 0}
+    - target: {fileID: 2519953544252300544, guid: 44cf50d1a2e68b64791a3e3143ccda19,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2519953544252300547, guid: 44cf50d1a2e68b64791a3e3143ccda19,
         type: 3}
@@ -13824,6 +13839,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: ControllerRayInteractor
+      objectReference: {fileID: 0}
+    - target: {fileID: 2519953544252300544, guid: 44cf50d1a2e68b64791a3e3143ccda19,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2519953544252300547, guid: 44cf50d1a2e68b64791a3e3143ccda19,
         type: 3}
@@ -16277,6 +16297,56 @@ PrefabInstance:
       propertyPath: m_Name
       value: KeyboardTranscript
       objectReference: {fileID: 0}
+    - target: {fileID: 848206548612715329, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1009.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 848206548612715329, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 449
+      objectReference: {fileID: 0}
+    - target: {fileID: 848206548612715329, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 848206548612715329, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 14.3
+      objectReference: {fileID: 0}
+    - target: {fileID: 848206548612715329, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 24.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 1710392799815387084, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 963
+      objectReference: {fileID: 0}
+    - target: {fileID: 1710392799815387084, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 178.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1710392799815387084, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1710392799815387084, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 12.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 1710392799815387084, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 131.7
+      objectReference: {fileID: 0}
     - target: {fileID: 2817224167288233240, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
         type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -16527,6 +16597,31 @@ PrefabInstance:
       propertyPath: phraseChecker
       value: 
       objectReference: {fileID: 824396582}
+    - target: {fileID: 6652410159768518542, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 921.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 6652410159768518542, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 171.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 6652410159768518542, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6652410159768518542, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 22.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 6652410159768518542, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -79
+      objectReference: {fileID: 0}
     - target: {fileID: 7142448843249543129, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
         type: 3}
       propertyPath: m_Text
@@ -16581,6 +16676,21 @@ PrefabInstance:
         type: 3}
       propertyPath: m_SelectionColor.r
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8077501294204963204, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.0030482286
+      objectReference: {fileID: 0}
+    - target: {fileID: 8077501294204963204, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.0030482286
+      objectReference: {fileID: 0}
+    - target: {fileID: 8077501294204963204, guid: 5a3ef60c6531ce14b99ad68f7e406e41,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.0030482286
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -16672,15 +16782,15 @@ MonoBehaviour:
   inputField: {fileID: 1432228119}
   displayText: {fileID: 1432228117}
   inputFieldBackground: {fileID: 1432228120}
-  phrases:
-  - Wait to hear the sentence then type it
-  - Wait to hear the sentence then type it
-  - Wait to hear the sentence then type it
-  - Wait to hear the sentence then type it
-  - Wait to hear the sentence then type it
-  - Wait to hear the sentence then type it
-  - Wait to hear the sentence then type it
-  - Wait to hear the sentence then type it
+  newPhrases:
+  - i enjoy drinking a warm cup of coffee while reading the news
+  - the weather today is quite pleasant with a clear sky and a gentle breeze
+  - for dinner i plan to cook pasta with a side of garlic bread.
+  - i need to remember to buy milk and eggs from the grocery store on my way home
+  - in my spare time, I like to read books and play video games
+  - tomorrow, I need to wake up early for a meeting
+  - the city lights at night are a beautiful sight to behold
+  - i like to go for a long walk in the park
 --- !u!1 &1435425285
 GameObject:
   m_ObjectHideFlags: 0
@@ -17890,6 +18000,102 @@ Transform:
     type: 3}
   m_PrefabInstance: {fileID: 960214956}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &1494398620
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 295425742}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 870b2383d881b1a49a44f0c0e7dd5798, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 0.721
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1506619156
 GameObject:
   m_ObjectHideFlags: 0
@@ -19088,7 +19294,7 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1625832161}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 4.9}
+  m_LocalPosition: {x: 0, y: 0, z: 5}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -19097,7 +19303,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -218.8, y: 35.1}
+  m_AnchoredPosition: {x: -345, y: 58}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1625832163
@@ -21541,6 +21747,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5658972927024126820, guid: bb1a18667128b7c49b1fa6ad25f83866,
+        type: 3}
+      propertyPath: requestEyeTrackingPermissionOnStartup
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6940859400442458798, guid: bb1a18667128b7c49b1fa6ad25f83866,
         type: 3}

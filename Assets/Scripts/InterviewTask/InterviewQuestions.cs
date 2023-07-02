@@ -55,8 +55,8 @@ public class InterviewQuestions : MonoBehaviour
 
             audioSource.PlayOneShot(endQuestionAudio);
 
-            // Wait for the audio to finish plus the delay before switching to new question
-            yield return new WaitForSeconds(endQuestionAudio.length + delayBetweenQuestions);
+            // Start countdown for the audio length plus delay before switching to new question
+            yield return StartCoroutine(StartCountdown(endQuestionAudio.length + delayBetweenQuestions));
 
             currentQuestionIndex++;
         }

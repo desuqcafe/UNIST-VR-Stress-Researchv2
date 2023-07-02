@@ -71,6 +71,12 @@ public class SimpleFittLaw : MonoBehaviour
         StartNewRound();
     }
 
+    void OnDisable()
+    {
+        EndGame();
+    }
+
+
     IEnumerator SetSphereMaterialDelayed(GameObject sphere, bool isCorrect)
     {
         yield return new WaitForSeconds(0.5f); // Adjust the delay as needed
@@ -123,33 +129,6 @@ public class SimpleFittLaw : MonoBehaviour
             clickHandler.sphereSelector = this.gameObject;
             clickHandler.isCorrect = isCorrect;
         }
-
-
-
-        // previous logic
-
-
-        
-        // float radius = 0.5f;
-        // int correctSphereIndex = Random.Range(0, sphereCount);
-
-        // for (int i = 0; i < sphereCount; i++)
-        // {
-        //     bool isCorrect = (i == correctSphereIndex);
-        //     GameObject sphere = Instantiate(spherePrefab, transform);
-
-        //     StartCoroutine(SetSphereMaterialDelayed(sphere, isCorrect));
-
-        //     float angle = (float)(i + 1) / sphereCount * Mathf.PI * 2f;
-        //     float x = Mathf.Sin(angle) * radius;
-        //     float y = Mathf.Cos(angle) * radius;
-        //     sphere.transform.localPosition = new Vector3(x, y, 0f);
-
-        //     SimpleSphereHandler clickHandler = sphere.GetComponent<SimpleSphereHandler>();
-        //     clickHandler.sphereSelector = this.gameObject;
-        //     clickHandler.isCorrect = isCorrect;
-        // }
-
 
     }
 

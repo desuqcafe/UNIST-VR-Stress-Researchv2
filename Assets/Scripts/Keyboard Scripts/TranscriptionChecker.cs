@@ -4,11 +4,13 @@ using TMPro;
 using System.Collections.Generic;
 using System.Collections;
 using System.IO;
-
+using System.Linq;
 
 public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
 {
     private Keyboard keyboard;
+    private List<int> indices;
+    private List<int> shuffledIndices;
 
     public void OnEnterPressed()
     {
@@ -35,7 +37,10 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
 
         GameObject keyboardObject = GameObject.Find("KeyboardTranscript");
         keyboard = keyboardObject.GetComponent<Keyboard>();
-        keyboard.SetInputHandler(this); 
+        keyboard.SetInputHandler(this);
+
+        // Initialize the indices based on the length of the list of sentences
+        indices = Enumerable.Range(0, newPhrases.Count).ToList();
     }
 
     public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
@@ -50,27 +55,20 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
     private float startTime;
     private float taskTime;
 
-    public List<string> phrases = new List<string> {
-        "i enjoy drinking a warm cup of coffee while reading the news",
-        "the weather today is quite pleasant with a clear sky and a gentle breeze",
-        "for dinner i plan to cook pasta with a side of garlic bread.",
-        "i need to remember to buy milk and eggs from the grocery store on my way home",
-        "in my spare time, I like to read books and play video games",
-        "tomorrow, I need to wake up early for a meeting",
-        "the city lights at night are a beautiful sight to behold",
-        "i like to go for a long walk in the park"
-    };
-
-    // public List<string> phrasesSecret = new List<string> {
-    //     "the dog jumped the moon",
-    //     "the dog jumped the moon", 
-    //     "the dog jumped the moon", 
-    //     "the dog jumped the moon", 
-    //     "the dog jumped the moon", 
-    //     "the dog jumped the moon", 
-    //     "the dog jumped the moon", 
-    //     "Wait to hear the sentence then type it"  
-    // };
+    public List<string> newPhrases = new List<string> {
+    "i enjoy drinking a warm cup of coffee while reading the news",
+    "the weather today is quite pleasant with a clear sky and a gentle breeze",
+    "for dinner i plan to cook pasta with a side of garlic bread",
+    "i need to remember to buy milk and eggs from the grocery store on my way home",
+    "in my spare time, I like to read books and play video games",
+    "the city lights at night are a beautiful sight to behold",
+    "i like to go for a long walk in the park and one of my favorite hobbies is gardening",
+    "it is important to stay hydrated throughout the day",
+    "reading helps me relax and unwind at the end of the day",
+    "on weekends i enjoy exploring new places and tomorrow I need to wake up early for a meeting",
+    "a healthy breakfast is a great way to start the day",
+    "i enjoy the calm and serenity of early mornings and my dog loves to play fetch in the park"
+};
 
     private int currentPhraseIndex;
     private int errors;
@@ -90,37 +88,58 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
         correctAnswers = 0;
         backspaceCount = 0;
         trialNumber = 1;
-        UpdateDisplayText();
         startTime = Time.time;
+
+        // Shuffle the indices at the beginning of each round
+        shuffledIndices = new List<int>(indices);
+        Shuffle(shuffledIndices);
+        currentPhraseIndex = shuffledIndices[0];
+        shuffledIndices.RemoveAt(0);
+        UpdateDisplayText();
+    }
+
+    private void Shuffle(List<int> list)
+    {
+        int n = list.Count;
+        System.Random rnd = new System.Random();
+        while (n > 1)
+        {
+            int k = (rnd.Next(0, n) % n);
+            n--;
+            int value = list[k];
+            list[k] = list[n];
+            list[n] = value;
+        }
     }
 
     public void CheckInput()
     {
-        if (inputField.text == phrases[currentPhraseIndex])
+        if (inputField.text == newPhrases[currentPhraseIndex])
         {
             correctAnswers++;
             inputField.text = "";
-            currentPhraseIndex++;
 
             StartCoroutine(ShowFeedback());
 
-            if (currentPhraseIndex < phrases.Count)
+            if (shuffledIndices.Count > 0)
             {
+                currentPhraseIndex = shuffledIndices[0];
+                shuffledIndices.RemoveAt(0);
                 UpdateDisplayText();
-
-                if (trackErrorRateAndAccuracy)
-                {
-                    CalculateErrorRateAndAccuracy();
-                }
-                StartNewRound();
-                WriteBufferedDataToFile();
             }
             else
             {
                 displayText.text = "";
             }
+
+            if (trackErrorRateAndAccuracy)
+            {
+                CalculateErrorRateAndAccuracy();
+            }
+            StartNewRound();
+            WriteBufferedDataToFile();
         }
-        else if (inputField.text.Length == phrases[currentPhraseIndex].Length)
+        else if (inputField.text.Length == newPhrases[currentPhraseIndex].Length)
         {
             errors++;
             // Here you can decide what to do if the input is wrong
@@ -135,7 +154,7 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void UpdateDisplayText()
     {
-        displayText.text = phrases[currentPhraseIndex];
+        displayText.text = newPhrases[currentPhraseIndex];
     }
 
     public IEnumerator ShowFeedback()
@@ -148,11 +167,11 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
     public void CalculateErrorRateAndAccuracy()
     {
         taskTime = Time.time - startTime;
-        timePerPhrase = taskTime / phrases.Count;
+        timePerPhrase = taskTime / newPhrases.Count;
         typingSpeed = (float)inputField.text.Length / taskTime;
 
-        float errorRate = (float)errors / phrases.Count;
-        float accuracy = (float)correctAnswers / phrases.Count;
+        float errorRate = (float)errors / newPhrases.Count;
+        float accuracy = (float)correctAnswers / newPhrases.Count;
 
         string data = $"{trialNumber}, {timePerPhrase}, {backspaceCount}, {typingSpeed}, {taskTime}, {errorRate}, {accuracy}";
         transcriptionCheckDataBuffer.Add(data);

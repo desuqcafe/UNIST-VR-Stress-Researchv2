@@ -53,14 +53,40 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
     private float typingSpeed;
 
 
-    public List<string> phrases = new List<string> {
-        "The boat floats on the water",
-        "The cat chased the mouse",
-        "The sun rises in the east",
-        "The leaves fall from the trees in autumn",
-        "The stars shine brightly at night",
-        "The train travels along the tracks"
-    };
+    public List<string> newNewphrases = new List<string> {
+    "birds fly south in the winter",
+    "a cat chased the curious mouse",
+    "sunrise marks the beginning of the day",
+    "trees shed their leaves in autumn",
+    "at night the stars shine brightly",
+    "following the tracks, the train travels swiftly",
+    "dogs often bark at strangers",
+    "through the open sky flies a solitary bird",
+    "children often play in parks",
+    "fish swim swiftly in the pond",
+    "spring brings blooming flowers",
+    "bees gather nectar from many flowers",
+    "bright is the moon in the night sky",
+    "many books are resting on the shelf",
+    "an artist is painting a beautiful scene",
+    "across the bridge the city can be seen",
+    "students study diligently for their exams",
+    "on the table there is a cup of coffee",
+    "green hills roll under the blue sky",
+    "she wore a white dress to the party",
+    "the old man walks slowly along the path",
+    "in the kitchen, someone is cooking dinner",
+    "joggers run around the park in the morning",
+    "a red balloon floats in the clear sky",
+    "the football game attracted many spectators",
+    "a young boy is flying a kite",
+    "beneath the waves marine life thrives",
+    "the library was filled with quiet whispers",
+    "on a canvas paint comes to life",
+    "the mountain range is beautifully outlined at sunset"
+};
+
+    public List<int> phraseIndices = new List<int>();  
 
     private int currentPhraseIndex;
     private int errors;
@@ -69,6 +95,13 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
     void OnEnable()
     {
         eyeTrackingRecorder.currentTask = "PhraseCheck";
+
+        // Fill the phraseIndices with values from 0 to newNewphrases.Count - 1
+        phraseIndices.Clear();
+        for (int i = 0; i < newNewphrases.Count; i++)
+        {
+            phraseIndices.Add(i);
+        }
 
         currentPhraseIndex = 0;
         errors = 0;
@@ -79,13 +112,18 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
         startTime = Time.time;
     }
 
+    void OnDisable()
+    {
+        WriteBufferedDataToFile();
+    }
+
     public void CheckInput()
     {
-        if (inputField.text == phrases[currentPhraseIndex])
+        if (inputField.text == newNewphrases[currentPhraseIndex])
         {
             correctAnswers++;
         }
-        else if (inputField.text.Length == phrases[currentPhraseIndex].Length)
+        else if (inputField.text.Length == newNewphrases[currentPhraseIndex].Length)
         {
             errors++;
         }
@@ -106,11 +144,13 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
         typingSpeed = (inputField.text.Length / 5.0f) / (timePerPhrase / 60.0f);
 
         inputField.text = "";
-        currentPhraseIndex++;
+
+        // Remove the current index from the list
+        phraseIndices.Remove(currentPhraseIndex);
 
         StartCoroutine(ShowFeedback());
 
-        if (currentPhraseIndex < phrases.Count)
+        if (phraseIndices.Count > 0)
         {
             UpdateDisplayText();
 
@@ -119,7 +159,7 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
                 CalculateErrorRateAndAccuracy();
             }
             StartNewRound();
-            WriteBufferedDataToFile(); // Add this line
+            WriteBufferedDataToFile();
         }
         else
         {
@@ -129,7 +169,9 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void UpdateDisplayText()
     {
-        displayText.text = phrases[currentPhraseIndex];
+        // Select a random index from the list of remaining indices
+        currentPhraseIndex = phraseIndices[Random.Range(0, phraseIndices.Count)];
+        displayText.text = newNewphrases[currentPhraseIndex];
     }
 
     public IEnumerator ShowFeedback()
@@ -142,8 +184,8 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
     public void CalculateErrorRateAndAccuracy()
     {
         taskTime = Time.time - startTime;
-        float errorRate = (float)errors / phrases.Count;
-        float accuracy = (float)correctAnswers / phrases.Count;
+        float errorRate = (float)errors / newNewphrases.Count;
+        float accuracy = (float)correctAnswers / newNewphrases.Count;
 
         string data = $"{trialNumber}, {timePerPhrase}, {backspaceCount}, {typingSpeed}, {taskTime}, {errorRate}, {accuracy}";
         phraseCheckerDataBuffer.Add(data);

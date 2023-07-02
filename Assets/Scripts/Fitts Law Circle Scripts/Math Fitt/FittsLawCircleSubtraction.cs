@@ -52,6 +52,9 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     private List<float> errorRates = new List<float>();
     private List<float> accuracies = new List<float>();
 
+    public AudioClip wrongAnswerAudio; // The audio clip to play when wrong answer is given
+    private AudioSource audioSource; // The audio source to play the clip
+
     private void Awake()
     {
         folderPath = Application.persistentDataPath;
@@ -67,6 +70,9 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+        audioSource = GetComponent<AudioSource>();
+
     }
 
     void OnEnable()
@@ -259,6 +265,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     {
         errors++;
         score--; // decrease the score
+        audioSource.PlayOneShot(wrongAnswerAudio); // play the sound
         StartNewRound(); // reset the game
     }
 
