@@ -1,16 +1,2 @@
 # UNIST-VR-Stress-Research
-Tracking Starts Disabled, needs to be enabled in inspector
-
-Teleport Buttons
-
-Q
-
-W
-
-E
-
-R
-
-T
-
-Y
+Phenotyping Stress of users in virtual reality environrments, adapting the Trier Social Stress Test (TSST) into a VR setting.
