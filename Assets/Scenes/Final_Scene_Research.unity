@@ -951,8 +951,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   filePathText: {fileID: 1274150027}
   writeInterval: 120
+  faceExpressions: {fileID: 0}
   leftEyeGaze: {fileID: 1894779905}
   rightEyeGaze: {fileID: 1894779903}
+  leftEye: {fileID: 1894779909}
+  rightEye: {fileID: 1894779907}
   headsetTransform: {fileID: 1894779900}
   leftControllerTransform: {fileID: 1894779899}
   rightControllerTransform: {fileID: 1894779898}
@@ -22004,6 +22007,18 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!4 &1894779907 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5658972927018185380, guid: bb1a18667128b7c49b1fa6ad25f83866,
+    type: 3}
+  m_PrefabInstance: {fileID: 1894779897}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1894779909 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5658972927018185378, guid: bb1a18667128b7c49b1fa6ad25f83866,
+    type: 3}
+  m_PrefabInstance: {fileID: 1894779897}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1928640896
 GameObject:
   m_ObjectHideFlags: 0
