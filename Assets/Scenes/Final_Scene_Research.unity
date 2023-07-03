@@ -179,6 +179,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Color Wall-1 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 7349396894801388820, guid: afc6a12b9c507274689c7614c0e550cd,
+        type: 3}
+      propertyPath: m_Layer
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8510554753064145295, guid: afc6a12b9c507274689c7614c0e550cd,
         type: 3}
       propertyPath: _whenSelect.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -951,9 +956,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   filePathText: {fileID: 1274150027}
   writeInterval: 120
+  trackingLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
   faceExpressions: {fileID: 230613568}
   leftEyeGaze: {fileID: 1894779905}
   rightEyeGaze: {fileID: 1894779903}
+  leftEye: {fileID: 1894779909}
+  rightEye: {fileID: 1894779907}
   headsetTransform: {fileID: 1894779900}
   leftControllerTransform: {fileID: 1894779899}
   rightControllerTransform: {fileID: 1894779898}
@@ -21885,6 +21895,18 @@ MonoBehaviour:
     mipBias: 0
     varianceClampScale: 0.9
     contrastAdaptiveSharpening: 0
+--- !u!4 &1894779907 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5658972927018185380, guid: bb1a18667128b7c49b1fa6ad25f83866,
+    type: 3}
+  m_PrefabInstance: {fileID: 1894779897}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1894779909 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 5658972927018185378, guid: bb1a18667128b7c49b1fa6ad25f83866,
+    type: 3}
+  m_PrefabInstance: {fileID: 1894779897}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1928640896
 GameObject:
   m_ObjectHideFlags: 0
