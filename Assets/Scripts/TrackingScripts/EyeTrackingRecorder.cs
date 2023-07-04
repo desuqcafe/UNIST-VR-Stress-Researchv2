@@ -41,8 +41,8 @@ public class EyeTrackingRecorder : MonoBehaviour
     private List<string> headsetAndControllerDataBuffer = new List<string>();
     private List<string> headsetVelocityAndAccelerationDataBuffer = new List<string>();
 
-    // Frame interval for writing data to the files
-    public int writeInterval = 60;
+    public int writeInterval = 600;  // Write every 10 seconds or so if running at 60fps
+    //public int maxBufferSize = 5000; // Change this to suit your needs    1000 elements
     private int frameCounter = 0;
 
 
@@ -236,28 +236,28 @@ public class EyeTrackingRecorder : MonoBehaviour
 
         frameCounter++;
 
+        // Once you hit the write interval or max buffer size, write data to file
         if (frameCounter >= writeInterval)
         {
-            // Create new lists that are copies of the original lists and pass those to WriteDataToFileAsync
             var hitDataToWrite = new List<string>(hitDataBuffer);
+            hitDataBuffer.Clear();
             WriteDataToFileAsync(hitDataFilePath, hitDataToWrite);
 
             var faceExpressionDataToWrite = new List<string>(faceExpressionDataBuffer);
+            faceExpressionDataBuffer.Clear();
             WriteDataToFileAsync(faceExpressionDataFilePath, faceExpressionDataToWrite);
 
             var eyeTrackingDataToWrite = new List<string>(eyeTrackingDataBuffer);
+            eyeTrackingDataBuffer.Clear();
             WriteDataToFileAsync(eyeTrackingDataFilePath, eyeTrackingDataToWrite);
 
             var headsetAndControllerDataToWrite = new List<string>(headsetAndControllerDataBuffer);
+            headsetAndControllerDataBuffer.Clear();
             WriteDataToFileAsync(headsetAndControllerDataFilePath, headsetAndControllerDataToWrite);
 
             var headsetVelocityAndAccelerationDataToWrite = new List<string>(headsetVelocityAndAccelerationDataBuffer);
-            WriteDataToFileAsync(headsetVelocityAndAccelerationDataFilePath, headsetVelocityAndAccelerationDataToWrite);
-
-            // Clear the buffers
-            eyeTrackingDataBuffer.Clear();
-            headsetAndControllerDataBuffer.Clear();
             headsetVelocityAndAccelerationDataBuffer.Clear();
+            WriteDataToFileAsync(headsetVelocityAndAccelerationDataFilePath, headsetVelocityAndAccelerationDataToWrite);
 
             // Reset the frame counter
             frameCounter = 0;
@@ -317,6 +317,46 @@ public class EyeTrackingRecorder : MonoBehaviour
                     await outputFile.WriteLineAsync(data);
                 }
             }
+        }
+        catch (Exception ex)
+        {
+            Debug.LogError("Error writing data to file: " + ex.Message);
+        }
+    }
+
+
+    void OnApplicationQuit()  //finish executing before terminating the application.
+    {
+        try
+        {
+            // Synchronous write for hitDataBuffer
+            if (hitDataBuffer.Count > 0)
+            {
+                using (StreamWriter outputFile = new StreamWriter(hitDataFilePath, true))
+                {
+                    foreach (string data in hitDataBuffer)
+                    {
+                        outputFile.WriteLine(data);
+                    }
+                }
+                hitDataBuffer.Clear();
+            }
+
+            // Synchronous write for faceExpressionDataBuffer
+            if (faceExpressionDataBuffer.Count > 0)
+            {
+                using (StreamWriter outputFile = new StreamWriter(faceExpressionDataFilePath, true))
+                {
+                    foreach (string data in faceExpressionDataBuffer)
+                    {
+                        outputFile.WriteLine(data);
+                    }
+                }
+                faceExpressionDataBuffer.Clear();
+            }
+
+            // Repeat similar blocks for your other data buffers...
+
         }
         catch (Exception ex)
         {
