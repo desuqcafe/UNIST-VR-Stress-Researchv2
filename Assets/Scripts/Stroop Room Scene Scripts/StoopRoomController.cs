@@ -104,7 +104,7 @@ public class StroopRoomController : MonoBehaviour
         word.color = matchedColor;
 
         // Set the trial start time
-        trialStartTime = Time.time;
+        trialStartTime = (float)TimeManager.Instance.CurrentTime;
     }
 
     public void ObjectSelected(int index)
@@ -113,7 +113,7 @@ public class StroopRoomController : MonoBehaviour
 
         int clickedIndex = objects[index].GetComponent<ObjectIndex>().index;
 
-        responseTime = Time.time - trialStartTime;
+        responseTime = (float)TimeManager.Instance.CurrentTime - trialStartTime;
 
 
         if (clickedIndex == matchedColorIndex)
@@ -150,7 +150,7 @@ public class StroopRoomController : MonoBehaviour
     private void CalculateErrorRateAndAccuracy()
     {
         // Calculate taskTime when the task is completed
-        taskTime = Time.time - startTime;
+        taskTime = (float)TimeManager.Instance.CurrentTime - startTime;
 
         float errorRate = (float)errors / totalRounds;
         float accuracy = (float)correctAnswers / totalRounds;
@@ -175,6 +175,6 @@ public class StroopRoomController : MonoBehaviour
 
     public void StartNewRound()
     {
-        startTime = Time.time;
+        startTime = (float)TimeManager.Instance.CurrentTime;
     }
 }

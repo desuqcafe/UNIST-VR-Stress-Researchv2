@@ -8,20 +8,8 @@ using UnityEngine;
 public class EyeTrackingRecorder : MonoBehaviour
 {
 
-    // Teleporting Controls:  Q W E R 
-
-
-
-
-
-
-    // 6 File Paths to change for file writing 
-    // 3 in EyeTracking Recorder
-    // 1 in SimpleFittLaw
-    // 1 in FittLawCircleSubtraction
-    // 1 in StroopRoomController
-    // 1 in PhraseChecker
     public static EyeTrackingRecorder Instance;
+    public double currentTime;
 
     public TMPro.TextMeshProUGUI filePathText;
 
@@ -136,6 +124,7 @@ public class EyeTrackingRecorder : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
         // Initialize variables
         InitFaceExpression();
         leftEyeGazeDirection = Vector3.zero;
@@ -162,6 +151,9 @@ public class EyeTrackingRecorder : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Use stopwatch.Elapsed.TotalSeconds instead of Time.time
+        currentTime = TimeManager.Instance.CurrentTime;
+
         // hit data
         // trackingLayerMask = LayerMask.GetMask("TrackingLayer");
         if (Physics.Raycast(leftEye.transform.position, leftEye.transform.forward, out hit, 10) ||
@@ -173,10 +165,15 @@ public class EyeTrackingRecorder : MonoBehaviour
             hitPosition = hit.point;
             if (!startTimeForObjects.ContainsKey(hitObject)) {
                 // This is the first time the object is looked at and store current time
-                startTimeForObjects[hitObject] = Time.time;
-            } else {
+                //startTimeForObjects[hitObject] = Time.time;
+                startTimeForObjects[hitObject] = (float)TimeManager.Instance.CurrentTime;
+            }
+            else
+            {
                 // The object is being looked at and calculate the duration
-                duration = Time.time - startTimeForObjects[hitObject];
+                //duration = Time.time - startTimeForObjects[hitObject];
+                duration = (float)TimeManager.Instance.CurrentTime - startTimeForObjects[hitObject];
+
                 // filePathText.text += "\nObject: " + hitObject.name + ", Duration: " + duration; // secs: duration%60; mins: duration/60 
             }
         }
@@ -266,14 +263,14 @@ public class EyeTrackingRecorder : MonoBehaviour
     // Function to buffer face expression data
     void BufferHitData()
     {
-        string hitData = $"{Time.time}, {currentTask}, {hitObject.name}, {hitPosition}, {duration}";
+        string hitData = $"{currentTime}, {currentTask}, {hitObject.name}, {hitPosition}, {duration}";
         hitDataBuffer.Add(hitData);
     }
 
     // Function to buffer face expression data
     void BufferFaceExpressionData()
     {
-        string faceExpressionData = $"{Time.time}, {currentTask}";
+        string faceExpressionData = $"{currentTime}, {currentTask}";
         foreach (FaceWeightComponent comp in components)
         {
             faceExpressionData += $", {comp.Weight}";
@@ -284,20 +281,20 @@ public class EyeTrackingRecorder : MonoBehaviour
     // Function to buffer eye tracking data
     void BufferEyeTrackingData()
     {
-        string eyeTrackingData = $"{Time.time}, {currentTask}, {leftEyeGazeDirection}, {rightEyeGazeDirection}, {leftEyeConfidence}, {rightEyeConfidence}, {leftEyePosition}, {rightEyePosition}, {leftEyeRotation}, {rightEyeRotation}";
+        string eyeTrackingData = $"{currentTime}, {currentTask}, {leftEyeGazeDirection}, {rightEyeGazeDirection}, {leftEyeConfidence}, {rightEyeConfidence}, {leftEyePosition}, {rightEyePosition}, {leftEyeRotation}, {rightEyeRotation}";
         eyeTrackingDataBuffer.Add(eyeTrackingData);
     }
 
     // Function to buffer headset and controller data
     void BufferHeadsetAndControllerData()
     {
-        string headsetAndControllerData = $"{Time.time}, {currentTask}, {headsetPosition}, {headsetRotation}, {leftControllerPosition}, {leftControllerRotation}, {rightControllerPosition}, {rightControllerRotation}";
+        string headsetAndControllerData = $"{currentTime}, {currentTask}, {headsetPosition}, {headsetRotation}, {leftControllerPosition}, {leftControllerRotation}, {rightControllerPosition}, {rightControllerRotation}";
         headsetAndControllerDataBuffer.Add(headsetAndControllerData);
     }
 
     void BufferHeadsetVelocityAndAccelerationData()
     {
-        string headsetVelocityAndAccelerationData = $"{Time.time}, {currentTask}, {headsetVelocity}, {headsetAcceleration}";
+        string headsetVelocityAndAccelerationData = $"{currentTime}, {currentTask}, {headsetVelocity}, {headsetAcceleration}";
         headsetVelocityAndAccelerationDataBuffer.Add(headsetVelocityAndAccelerationData);
     }
 

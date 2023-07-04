@@ -109,7 +109,7 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
         trialNumber = 0;
         UpdateDisplayText();
         //InvokeRepeating(nameof(CheckInput), 1f, 1f);
-        startTime = Time.time;
+        startTime = (float)TimeManager.Instance.CurrentTime;
     }
 
     void OnDisable()
@@ -140,7 +140,7 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
     public void NextPhrase()
     {
         trialNumber++;
-        timePerPhrase = Time.time - startTime;
+        timePerPhrase = (float)TimeManager.Instance.CurrentTime - startTime;
         typingSpeed = (inputField.text.Length / 5.0f) / (timePerPhrase / 60.0f);
 
         inputField.text = "";
@@ -183,7 +183,7 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void CalculateErrorRateAndAccuracy()
     {
-        taskTime = Time.time - startTime;
+        taskTime = (float)TimeManager.Instance.CurrentTime - startTime;
         float errorRate = (float)errors / newNewphrases.Count;
         float accuracy = (float)correctAnswers / newNewphrases.Count;
 
@@ -218,6 +218,6 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void StartNewRound()
     {
-        startTime = Time.time;
+        startTime = (float)TimeManager.Instance.CurrentTime;
     }
 }

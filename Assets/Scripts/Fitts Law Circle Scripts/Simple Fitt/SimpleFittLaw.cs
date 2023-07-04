@@ -56,7 +56,7 @@ public class SimpleFittLaw : MonoBehaviour
         errors = 0;
         correctAnswers = 0;
         totalRounds = 1000; // You may want to set this as a constant or as a public variable for flexibility.
-        startTime = 0f;
+        //startTime = 0f;
         taskTime = 0f;
         simpleFittDataBuffer.Clear();
         roundTimes.Clear();
@@ -65,6 +65,9 @@ public class SimpleFittLaw : MonoBehaviour
         incorrectSphereGazeDurations.Clear();
         errorRates.Clear();
         accuracies.Clear();
+
+        startTime = (float)TimeManager.Instance.CurrentTime;
+
 
         // Call your methods to setup the task
         SpawnSpheres();
@@ -176,7 +179,7 @@ public class SimpleFittLaw : MonoBehaviour
 
     private void CalculateErrorRateAndAccuracy()
     {
-        taskTime = Time.time - startTime;
+        taskTime = (float)TimeManager.Instance.CurrentTime - startTime;
         float errorRate = (float)errors / totalRounds;
         float accuracy = (float)correctAnswers / totalRounds;
 
@@ -212,7 +215,7 @@ public class SimpleFittLaw : MonoBehaviour
 
     public void StartNewRound()
     {
-        startTime = Time.time;
+        startTime = (float)TimeManager.Instance.CurrentTime;;
     }
 
     void EndGame()

@@ -88,7 +88,7 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
         correctAnswers = 0;
         backspaceCount = 0;
         trialNumber = 1;
-        startTime = Time.time;
+        startTime = (float)TimeManager.Instance.CurrentTime;
 
         // Shuffle the indices at the beginning of each round
         shuffledIndices = new List<int>(indices);
@@ -166,7 +166,7 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void CalculateErrorRateAndAccuracy()
     {
-        taskTime = Time.time - startTime;
+        taskTime = (float)TimeManager.Instance.CurrentTime - startTime;
         timePerPhrase = taskTime / newPhrases.Count;
         typingSpeed = (float)inputField.text.Length / taskTime;
 
@@ -194,7 +194,7 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void StartNewRound()
     {
-        startTime = Time.time;
+        startTime = (float)TimeManager.Instance.CurrentTime;
     }
 
     public void IncrementBackspaceCount()

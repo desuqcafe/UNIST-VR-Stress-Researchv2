@@ -79,7 +79,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     {
         eyeTrackingRecorder.currentTask = "MathTaskStress";
 
-        startTime = Time.time;
+        startTime = (float)TimeManager.Instance.CurrentTime;
         SpawnSpheres();
     }
 
@@ -213,7 +213,7 @@ public class FittsLawCircleSubtraction : MonoBehaviour
     {
         if (roundCount < maxRounds)
         {
-            startTime = Time.time;
+            startTime = (float)TimeManager.Instance.CurrentTime;
             errors = 0;
 
             // Delete previous spheres
@@ -294,6 +294,6 @@ public class FittsLawCircleSubtraction : MonoBehaviour
 
     void Update()
     {
-        taskTime = Time.time - startTime;
+        taskTime = (float)TimeManager.Instance.CurrentTime - startTime;
     }
 }
