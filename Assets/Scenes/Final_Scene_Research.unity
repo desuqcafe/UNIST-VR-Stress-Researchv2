@@ -951,7 +951,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   filePathText: {fileID: 1274150027}
-  writeInterval: 120
+  writeInterval: 600
   faceExpressions: {fileID: 73786178}
   leftEyeGaze: {fileID: 1894779905}
   rightEyeGaze: {fileID: 1894779903}
