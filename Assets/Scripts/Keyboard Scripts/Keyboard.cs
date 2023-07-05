@@ -8,7 +8,7 @@ public class Keyboard : MonoBehaviour
 {
     public TMP_InputField inputField;
     public TMP_Text promptText;
-    private int currentPromptIndex = 0;
+    //private int currentPromptIndex = 0;
     public GameObject normalButtons;
     public GameObject capsButtons;
     private bool caps;

@@ -55,7 +55,7 @@ public class SimpleFittLaw : MonoBehaviour
         // Initialize your variables here.
         errors = 0;
         correctAnswers = 0;
-        totalRounds = 1000; // You may want to set this as a constant or as a public variable for flexibility.
+        totalRounds = 10000; // You may want to set this as a constant or as a public variable for flexibility.
         //startTime = 0f;
         taskTime = 0f;
         simpleFittDataBuffer.Clear();
@@ -76,6 +76,8 @@ public class SimpleFittLaw : MonoBehaviour
 
     void OnDisable()
     {
+        StopAllCoroutines();
+        lastCorrectSphereIndex = -3;
         EndGame();
     }
 
@@ -84,18 +86,21 @@ public class SimpleFittLaw : MonoBehaviour
     {
         yield return new WaitForSeconds(0.5f); // Adjust the delay as needed
 
-        Material material;
-
-        if (isCorrect)
+        if (sphere != null) // Check if the sphere still exists
         {
-            material = correctMaterial;
-        }
-        else
-        {
-            material = incorrectMaterial;
-        }
+            Material material;
 
-        sphere.GetComponent<Renderer>().material = material;
+            if (isCorrect)
+            {
+                material = correctMaterial;
+            }
+            else
+            {
+                material = incorrectMaterial;
+            }
+
+            sphere.GetComponent<Renderer>().material = material;
+        }
     }
 
     void SpawnSpheres()

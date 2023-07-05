@@ -55,7 +55,6 @@ public class FittsLawTarget : MonoBehaviour
 
         isBeingClicked = false;
     }
-
     IEnumerator ShowFeedbackAndContinue(Material feedbackMaterial, GameObject correctSphere)
     {
         ChangeAllSpheresMaterial(feedbackMaterial);
@@ -70,7 +69,7 @@ public class FittsLawTarget : MonoBehaviour
         }
         else
         {
-            fittsLawCircleSubtraction.StartNewRound();
+            fittsLawCircleSubtraction.RegisterError(gameObject);  // Call RegisterError when the selected sphere is incorrect
         }
     }
 

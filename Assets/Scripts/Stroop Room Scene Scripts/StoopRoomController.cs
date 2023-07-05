@@ -12,7 +12,7 @@ public class StroopRoomController : MonoBehaviour
     private string folderPath;
     private string timeStamp;
     private string stroopRoomDataFilePath;
-    public int totalRounds = 50; // Set a default value or make it configurable in the inspector
+    public int totalRounds = 10000; // Set a default value or make it configurable in the inspector
 
 
     private List<string> stroopRoomDataBuffer = new List<string>();

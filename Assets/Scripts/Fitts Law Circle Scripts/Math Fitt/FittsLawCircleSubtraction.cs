@@ -266,7 +266,9 @@ public class FittsLawCircleSubtraction : MonoBehaviour
         errors++;
         score--; // decrease the score
         audioSource.PlayOneShot(wrongAnswerAudio); // play the sound
+        correctAnswer = 1022; // reset the correct answer to 1022
         StartNewRound(); // reset the game
+
     }
 
     void CalculateErrorRateAndAccuracy()

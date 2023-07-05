@@ -41,6 +41,11 @@ public class InterviewQuestions : MonoBehaviour
         questionCoroutine = StartCoroutine(QuestionTimer());
     }
 
+    private void OnDisable()
+    {
+        StopAllCoroutines();
+    }
+
     private IEnumerator QuestionTimer()
     {
         // Initial waiting time

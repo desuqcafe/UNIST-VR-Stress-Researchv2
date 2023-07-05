@@ -119,7 +119,7 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void CheckInput()
     {
-        if (inputField.text == newNewphrases[currentPhraseIndex])
+        if (inputField.text.Trim().ToLower() == newNewphrases[currentPhraseIndex].Trim().ToLower())
         {
             correctAnswers++;
         }
@@ -139,32 +139,26 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void NextPhrase()
     {
+        // Calculate and record data
         trialNumber++;
         timePerPhrase = (float)TimeManager.Instance.CurrentTime - startTime;
         typingSpeed = (inputField.text.Length / 5.0f) / (timePerPhrase / 60.0f);
 
+        // Clear input field
         inputField.text = "";
 
-        // Remove the current index from the list
-        phraseIndices.Remove(currentPhraseIndex);
-
+        // Start feedback coroutine
         StartCoroutine(ShowFeedback());
 
-        if (phraseIndices.Count > 0)
-        {
-            UpdateDisplayText();
+        // Start a new round
+        StartNewRound();
 
-            if (trackErrorRateAndAccuracy)
-            {
-                CalculateErrorRateAndAccuracy();
-            }
-            StartNewRound();
-            WriteBufferedDataToFile();
-        }
-        else
+        if (trackErrorRateAndAccuracy)
         {
-            displayText.text = "";
+            CalculateErrorRateAndAccuracy();
         }
+        
+        WriteBufferedDataToFile();
     }
 
     public void UpdateDisplayText()
@@ -218,6 +212,20 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void StartNewRound()
     {
+        if (phraseIndices.Count > 0)
+        {
+            // Remove the current index from the list
+            phraseIndices.Remove(currentPhraseIndex);
+
+            // Update display text
+            UpdateDisplayText();
+        }
+        else
+        {
+            // Clear the display text
+            displayText.text = "";
+        }
+        // Reset the start time
         startTime = (float)TimeManager.Instance.CurrentTime;
     }
 }

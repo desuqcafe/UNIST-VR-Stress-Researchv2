@@ -114,38 +114,34 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void CheckInput()
     {
-        if (inputField.text == newPhrases[currentPhraseIndex])
+        // Trim leading/trailing spaces and ignore case during comparison
+        if (inputField.text.Trim().ToLower() == newPhrases[currentPhraseIndex].Trim().ToLower())
         {
             correctAnswers++;
-            inputField.text = "";
-
-            StartCoroutine(ShowFeedback());
-
-            if (shuffledIndices.Count > 0)
-            {
-                currentPhraseIndex = shuffledIndices[0];
-                shuffledIndices.RemoveAt(0);
-                UpdateDisplayText();
-            }
-            else
-            {
-                displayText.text = "";
-            }
-
-            if (trackErrorRateAndAccuracy)
-            {
-                CalculateErrorRateAndAccuracy();
-            }
-            StartNewRound();
-            WriteBufferedDataToFile();
         }
         else if (inputField.text.Length == newPhrases[currentPhraseIndex].Length)
         {
             errors++;
-            // Here you can decide what to do if the input is wrong
-            inputField.text = "";
         }
+
+        // Regardless of whether input is correct or not, clear the input field
+        inputField.text = "";
+
+        // Show feedback
+        StartCoroutine(ShowFeedback());
+
+        // Start a new round
+        StartNewRound();
+
+        if (trackErrorRateAndAccuracy)
+        {
+            CalculateErrorRateAndAccuracy();
+        }
+
+        WriteBufferedDataToFile();
     }
+
+
 
     public void NextPhrase()
     {
@@ -194,6 +190,20 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
 
     public void StartNewRound()
     {
+        if (shuffledIndices.Count > 0)
+        {
+            // Select a new phrase
+            currentPhraseIndex = shuffledIndices[0];
+            shuffledIndices.RemoveAt(0);
+            // Reset the display text
+            UpdateDisplayText();
+        }
+        else
+        {
+            // No more phrases left, clear the display text
+            displayText.text = "";
+        }
+        // Reset the start time
         startTime = (float)TimeManager.Instance.CurrentTime;
     }
 

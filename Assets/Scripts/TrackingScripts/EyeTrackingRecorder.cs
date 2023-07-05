@@ -2,11 +2,13 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using UnityEngine;
 
 
 public class EyeTrackingRecorder : MonoBehaviour
 {
+
 
     public static EyeTrackingRecorder Instance;
     public double currentTime;
@@ -33,6 +35,20 @@ public class EyeTrackingRecorder : MonoBehaviour
     //public int maxBufferSize = 5000; // Change this to suit your needs    1000 elements
     private int frameCounter = 0;
 
+    private void WriteHeadersToFile(string filePath)
+    {
+        // Get all the names of the FaceExpression enum
+        List<string> faceExpressionNames = Enum.GetNames(typeof(OVRFaceExpressions.FaceExpression)).ToList();
+
+        // Join them together with commas to make a CSV header
+        string headers = string.Join(", ", faceExpressionNames);
+
+        // Append 'currentTime' and 'currentTask' at the start of the header
+        headers = "currentTime, currentTask, " + headers;
+
+        // Write the headers to the file
+        File.WriteAllText(filePath, headers + Environment.NewLine);
+    }
 
     private void Awake()
     {
@@ -49,6 +65,7 @@ public class EyeTrackingRecorder : MonoBehaviour
 
         hitDataFilePath = Path.Combine(folderPath, "hitData_" + timeStamp + ".csv");
         faceExpressionDataFilePath = Path.Combine(folderPath, "faceExpressionData_" + timeStamp + ".csv");
+        WriteHeadersToFile(faceExpressionDataFilePath);
         eyeTrackingDataFilePath = Path.Combine(folderPath, "eyeTrackingData_" + timeStamp + ".csv");
         headsetAndControllerDataFilePath = Path.Combine(folderPath, "headsetAndControllerData_" + timeStamp + ".csv");
         headsetVelocityAndAccelerationDataFilePath = Path.Combine(folderPath, "headsetVelocityAndAccelerationData_" + timeStamp + ".csv");
@@ -322,7 +339,7 @@ public class EyeTrackingRecorder : MonoBehaviour
     }
 
 
-    void OnApplicationQuit()  //finish executing before terminating the application.
+    void OnApplicationQuit()
     {
         try
         {
@@ -352,14 +369,51 @@ public class EyeTrackingRecorder : MonoBehaviour
                 faceExpressionDataBuffer.Clear();
             }
 
-            // Repeat similar blocks for your other data buffers...
+            // Synchronous write for eyeTrackingDataBuffer
+            if (eyeTrackingDataBuffer.Count > 0)
+            {
+                using (StreamWriter outputFile = new StreamWriter(eyeTrackingDataFilePath, true))
+                {
+                    foreach (string data in eyeTrackingDataBuffer)
+                    {
+                        outputFile.WriteLine(data);
+                    }
+                }
+                eyeTrackingDataBuffer.Clear();
+            }
 
+            // Synchronous write for headsetAndControllerDataBuffer
+            if (headsetAndControllerDataBuffer.Count > 0)
+            {
+                using (StreamWriter outputFile = new StreamWriter(headsetAndControllerDataFilePath, true))
+                {
+                    foreach (string data in headsetAndControllerDataBuffer)
+                    {
+                        outputFile.WriteLine(data);
+                    }
+                }
+                headsetAndControllerDataBuffer.Clear();
+            }
+
+            // Synchronous write for headsetVelocityAndAccelerationDataBuffer
+            if (headsetVelocityAndAccelerationDataBuffer.Count > 0)
+            {
+                using (StreamWriter outputFile = new StreamWriter(headsetVelocityAndAccelerationDataFilePath, true))
+                {
+                    foreach (string data in headsetVelocityAndAccelerationDataBuffer)
+                    {
+                        outputFile.WriteLine(data);
+                    }
+                }
+                headsetVelocityAndAccelerationDataBuffer.Clear();
+            }
         }
         catch (Exception ex)
         {
             Debug.LogError("Error writing data to file: " + ex.Message);
         }
     }
+
 
 
 

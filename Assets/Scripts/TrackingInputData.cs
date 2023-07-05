@@ -12,16 +12,16 @@ public class TrackingInputData : MonoBehaviour
 
     private float dataRightVelocity = 0f;
 
-    private float dataHMDPosition = 0f;
+    // private float dataHMDPosition = 0f;
 
-    bool introTask = false;
-    bool SubtractionTask = false;
-    bool KeyboardTask = false;
-    bool FiitLawTask = false;
+    // bool introTask = false;
+    // bool SubtractionTask = false;
+    // bool KeyboardTask = false;
+    // bool FiitLawTask = false;
 
     bool leftControllerFound = false;
-    bool rightControllerFound = false;
-    bool HMDFound = false;
+    //bool rightControllerFound = false;
+    // bool HMDFound = false;
 
 
 
