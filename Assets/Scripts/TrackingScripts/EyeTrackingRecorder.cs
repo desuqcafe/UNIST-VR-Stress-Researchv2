@@ -31,6 +31,13 @@ public class EyeTrackingRecorder : MonoBehaviour
     private List<string> headsetAndControllerDataBuffer = new List<string>();
     private List<string> headsetVelocityAndAccelerationDataBuffer = new List<string>();
 
+    // File path for face region confidence data
+    private string faceRegionConfidenceDataFilePath;
+
+    // Buffer to store face region confidence data
+    private List<string> faceRegionConfidenceDataBuffer = new List<string>();
+
+
     public int writeInterval = 600;  // Write every 10 seconds or so if running at 60fps
     //public int maxBufferSize = 5000; // Change this to suit your needs    1000 elements
     private int frameCounter = 0;
@@ -70,6 +77,11 @@ public class EyeTrackingRecorder : MonoBehaviour
         headsetAndControllerDataFilePath = Path.Combine(folderPath, "headsetAndControllerData_" + timeStamp + ".csv");
         headsetVelocityAndAccelerationDataFilePath = Path.Combine(folderPath, "headsetVelocityAndAccelerationData_" + timeStamp + ".csv");
 
+        faceRegionConfidenceDataFilePath = Path.Combine(folderPath, "faceRegionConfidenceData_" + timeStamp + ".csv");
+
+        // Write headers to the face region confidence data file
+        WriteFaceRegionConfidenceHeaderToFile(faceRegionConfidenceDataFilePath);
+
 
         string directoryPath = Path.GetDirectoryName(eyeTrackingDataFilePath);
 
@@ -81,6 +93,33 @@ public class EyeTrackingRecorder : MonoBehaviour
         {
             filePathText.text = "Directory does not exist: " + directoryPath;
         }
+    }
+
+
+    void WriteFaceRegionConfidenceHeaderToFile(string filePath)
+    {
+        // Generate headers based on FaceRegionConfidenceComponent names
+        string headers = "currentTime, currentTask";
+        foreach (FaceRegionConfidenceComponent comp in faceRegionConfidenceComponents)
+        {
+            headers += $", {comp.Name}";
+        }
+
+        // Write the headers to the file
+        File.WriteAllText(filePath, headers + Environment.NewLine);
+    }
+
+    void BufferFaceRegionConfidenceData()
+    {
+        // Generate a line of data
+        string faceRegionConfidenceData = $"{currentTime}, {currentTask}";
+        foreach (FaceRegionConfidenceComponent comp in faceRegionConfidenceComponents)
+        {
+            faceRegionConfidenceData += $", {comp.Confidence}";
+        }
+
+        // Add the line of data to the buffer
+        faceRegionConfidenceDataBuffer.Add(faceRegionConfidenceData);
     }
 
     // Hit position and time data
@@ -102,6 +141,30 @@ public class EyeTrackingRecorder : MonoBehaviour
         public override string ToString() => $"{FaceExpression}: {Name}: {Weight}";
     }
     private List<FaceWeightComponent> components = new List<FaceWeightComponent>();
+
+    // Class to store FaceRegionConfidence and its associated confidence value
+    private class FaceRegionConfidenceComponent
+    {
+        public string Name;
+        public float Confidence;
+        public OVRFaceExpressions.FaceRegionConfidence FaceRegionConfidence { get; set; }
+
+        public override string ToString() => $"{FaceRegionConfidence}: {Name}: {Confidence}";
+    }
+    private List<FaceRegionConfidenceComponent> faceRegionConfidenceComponents = new List<FaceRegionConfidenceComponent>();
+
+    // Initialize the face region confidence components
+    private void InitFaceRegionConfidence()
+    {
+        foreach (OVRFaceExpressions.FaceRegionConfidence e in Enum.GetValues(typeof(OVRFaceExpressions.FaceRegionConfidence)))
+        {
+            FaceRegionConfidenceComponent faceRegionConfidenceComponent = new FaceRegionConfidenceComponent();
+            faceRegionConfidenceComponent.FaceRegionConfidence = e;
+            faceRegionConfidenceComponent.Name = e.ToString();
+            faceRegionConfidenceComponents.Add(faceRegionConfidenceComponent);
+        }
+    }
+
 
     // Reference to the OVREyeGaze script for left and right eyes
     public OVREyeGaze leftEyeGaze;
@@ -144,6 +207,7 @@ public class EyeTrackingRecorder : MonoBehaviour
 
         // Initialize variables
         InitFaceExpression();
+        InitFaceRegionConfidence();
         leftEyeGazeDirection = Vector3.zero;
         rightEyeGazeDirection = Vector3.zero;
         leftEyeConfidence = 0;
@@ -212,6 +276,16 @@ public class EyeTrackingRecorder : MonoBehaviour
         // Buffer face expression data
         BufferFaceExpressionData();
 
+        foreach (FaceRegionConfidenceComponent comp in faceRegionConfidenceComponents)
+        {
+            float confidence;
+            if (faceExpressions.TryGetWeightConfidence(comp.FaceRegionConfidence, out confidence))  // Get confidence value
+            {
+                comp.Confidence = confidence;  // Assign confidence value
+            }
+        }
+        BufferFaceRegionConfidenceData();
+
         // Get eye tracking data from OVREyeGaze for left and right eyes
         leftEyeGazeDirection = leftEyeGaze.transform.forward;
         leftEyeConfidence = leftEyeGaze.Confidence;
@@ -273,6 +347,10 @@ public class EyeTrackingRecorder : MonoBehaviour
             headsetVelocityAndAccelerationDataBuffer.Clear();
             WriteDataToFileAsync(headsetVelocityAndAccelerationDataFilePath, headsetVelocityAndAccelerationDataToWrite);
 
+            var faceRegionConfidenceDataToWrite = new List<string>(faceRegionConfidenceDataBuffer);
+            WriteDataToFileAsync(faceRegionConfidenceDataFilePath, new List<string>(faceRegionConfidenceDataToWrite));
+            faceRegionConfidenceDataBuffer.Clear();
+
             // Reset the frame counter
             frameCounter = 0;
         }
@@ -293,6 +371,12 @@ public class EyeTrackingRecorder : MonoBehaviour
             faceExpressionData += $", {comp.Weight}";
         }
         faceExpressionDataBuffer.Add(faceExpressionData);
+    }
+
+
+    void WriteFaceRegionConfidenceDataToFile(string filePath)
+    {
+        System.IO.File.WriteAllLines(filePath, faceRegionConfidenceDataBuffer);
     }
 
     // Function to buffer eye tracking data
