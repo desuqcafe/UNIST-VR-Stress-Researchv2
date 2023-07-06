@@ -125,7 +125,7 @@ public class EyeTrackingRecorder : MonoBehaviour
     // Hit position and time data
     // public LayerMask trackingLayerMask;
     private RaycastHit hit;
-    private Dictionary<GameObject, float> startTimeForObjects = new Dictionary<GameObject, float>();
+    private Dictionary<GameObject, List<float>> hitTimeForObjects = new Dictionary<GameObject, List<float>>();
     float duration;
     Vector3 hitPosition;
     GameObject hitObject;
@@ -237,24 +237,24 @@ public class EyeTrackingRecorder : MonoBehaviour
 
         // hit data
         // trackingLayerMask = LayerMask.GetMask("TrackingLayer");
-        if (Physics.Raycast(leftEye.transform.position, leftEye.transform.forward, out hit, 10) ||
-            Physics.Raycast(rightEye.transform.position, rightEye.transform.forward, out hit, 10)) {
+        maxDistance = 1000;
+        if (Physics.Raycast(leftEye.transform.position, leftEye.transform.forward, out hit, maxDistance) ||
+            Physics.Raycast(rightEye.transform.position, rightEye.transform.forward, out hit, maxDistance)) {
             // filePathText.text +=  "\n\nHit Position:" + hit.point.ToString();
             hitObject = hit.collider.gameObject;
             // filePathText.text += "\nHit Object:" + hitObject;
             
             hitPosition = hit.point;
-            if (!startTimeForObjects.ContainsKey(hitObject)) {
+            currentTime = (float)TimeManager.Instance.CurrentTime;
+            if (!hitTimeForObjects.ContainsKey(hitObject)) {
                 // This is the first time the object is looked at and store current time
-                //startTimeForObjects[hitObject] = Time.time;
-                startTimeForObjects[hitObject] = (float)TimeManager.Instance.CurrentTime;
+                hitTimeForObjects[hitObject].Add(currentTime);
             }
             else
             {
-                // The object is being looked at and calculate the duration
-                //duration = Time.time - startTimeForObjects[hitObject];
-                duration = (float)TimeManager.Instance.CurrentTime - startTimeForObjects[hitObject];
-
+                // The object is being looked at, calculate the duration to the previous. Store current time to List of hit time for objects
+                duration = currentTime - hitTimeForObjects[hitObject][-1];
+                hitTimeForObjects[hitObject].Add(currentTime);
                 // filePathText.text += "\nObject: " + hitObject.name + ", Duration: " + duration; // secs: duration%60; mins: duration/60 
             }
         }
