@@ -233,28 +233,32 @@ public class EyeTrackingRecorder : MonoBehaviour
     void Update()
     {
         // Use stopwatch.Elapsed.TotalSeconds instead of Time.time
-        currentTime = TimeManager.Instance.CurrentTime;
+        currentTime = (float)TimeManager.Instance.CurrentTime;
 
         // hit data
         // trackingLayerMask = LayerMask.GetMask("TrackingLayer");
-        maxDistance = 1000;
+        int maxDistance = 1000;
         if (Physics.Raycast(leftEye.transform.position, leftEye.transform.forward, out hit, maxDistance) ||
             Physics.Raycast(rightEye.transform.position, rightEye.transform.forward, out hit, maxDistance)) {
             // filePathText.text +=  "\n\nHit Position:" + hit.point.ToString();
             hitObject = hit.collider.gameObject;
             // filePathText.text += "\nHit Object:" + hitObject;
-            
+
             hitPosition = hit.point;
-            currentTime = (float)TimeManager.Instance.CurrentTime;
-            if (!hitTimeForObjects.ContainsKey(hitObject)) {
+            float currentTimeHit = (float)TimeManager.Instance.CurrentTime;
+            if (!hitTimeForObjects.ContainsKey(hitObject))
+            {
                 // This is the first time the object is looked at and store current time
-                hitTimeForObjects[hitObject].Add(currentTime);
+                List<float> times = new List<float>();
+                times.Add(currentTimeHit);
+                hitTimeForObjects.Add(hitObject, times);
             }
             else
             {
                 // The object is being looked at, calculate the duration to the previous. Store current time to List of hit time for objects
-                duration = currentTime - hitTimeForObjects[hitObject][-1];
-                hitTimeForObjects[hitObject].Add(currentTime);
+                List<float> times = hitTimeForObjects[hitObject];
+                duration = currentTimeHit - times[times.Count - 1];
+                times.Add(currentTimeHit);
                 // filePathText.text += "\nObject: " + hitObject.name + ", Duration: " + duration; // secs: duration%60; mins: duration/60 
             }
         }
@@ -317,6 +321,7 @@ public class EyeTrackingRecorder : MonoBehaviour
 
         // Buffer headset velocity and acceleration data
         BufferHeadsetVelocityAndAccelerationData();
+        //Debug.Log("Update Time:" + currentTime);
 
         // Update previous position and velocity values
         previousHeadsetPosition = currentHeadsetPosition;
@@ -391,6 +396,8 @@ public class EyeTrackingRecorder : MonoBehaviour
     {
         string headsetAndControllerData = $"{currentTime}, {currentTask}, {headsetPosition}, {headsetRotation}, {leftControllerPosition}, {leftControllerRotation}, {rightControllerPosition}, {rightControllerRotation}";
         headsetAndControllerDataBuffer.Add(headsetAndControllerData);
+        //Debug.Log("Buffer Time:" + currentTime);
+
     }
 
     void BufferHeadsetVelocityAndAccelerationData()

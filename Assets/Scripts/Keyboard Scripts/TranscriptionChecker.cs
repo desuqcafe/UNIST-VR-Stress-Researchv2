@@ -46,7 +46,7 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
     public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
 
 
-    public bool trackErrorRateAndAccuracy = false;
+    public bool trackErrorRateAndAccuracy = true;
 
     public TMP_InputField inputField;
     public TextMeshProUGUI displayText;
@@ -155,9 +155,9 @@ public class TranscriptionChecker : MonoBehaviour, IKeyboardInputHandler
 
     public IEnumerator ShowFeedback()
     {
-        inputFieldBackground.color = Color.green;
+        //inputFieldBackground.color = Color.green;
         yield return new WaitForSeconds(0.50f);
-        inputFieldBackground.color = Color.white;
+        //inputFieldBackground.color = Color.white;
     }
 
     public void CalculateErrorRateAndAccuracy()

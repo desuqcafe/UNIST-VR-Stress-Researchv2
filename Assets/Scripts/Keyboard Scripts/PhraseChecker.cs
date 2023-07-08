@@ -39,7 +39,7 @@ public class PhraseChecker : MonoBehaviour, IKeyboardInputHandler
 
     public EyeTrackingRecorder eyeTrackingRecorder; // reference the EyeTrackingRecorder script
 
-    public bool trackErrorRateAndAccuracy = false;
+    public bool trackErrorRateAndAccuracy = true;
 
     public TMP_InputField inputField;
     public TextMeshProUGUI displayText;
